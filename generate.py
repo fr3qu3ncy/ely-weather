@@ -1,0 +1,903 @@
+#!/usr/bin/env python3
+"""
+Generate static weather website for Ely, Cambridgeshire.
+Fetches from Open-Meteo, produces index.html + 7 day pages + styles.css.
+Push to GitHub Pages at https://fr3qu3ncy.github.io/ely-weather/
+"""
+import json
+import urllib.parse
+import urllib.request
+from datetime import datetime, timedelta
+from pathlib import Path
+
+# ─── Config ───────────────────────────────────────────────────────────
+LOCATION = "Ely, Cambridgeshire"
+LAT = 52.25
+LON = 0.15
+TZ = "Europe/London"
+GEOCODE_KEY = "69c9249c84a15174072507uym8e74af"
+GEOCODE_URL = "https://geocode.maps.co/search"
+WEATHER_URL = "https://api.open-meteo.com/v1/forecast"
+
+WMO = {
+    0: ("Clear sky", "☀️"), 1: ("Mainly clear", "🌤️"),
+    2: ("Partly cloudy", "⛅"), 3: ("Overcast", "☁️"),
+    45: ("Fog", "🌫️"), 48: ("Rime fog", "🌫️"),
+    51: ("Light drizzle", "🌦️"), 53: ("Moderate drizzle", "🌦️"),
+    55: ("Dense drizzle", "🌧️"),
+    56: ("Light freezing drizzle", "🌧️"), 57: ("Dense freezing drizzle", "🌧️"),
+    61: ("Slight rain", "🌦️"), 63: ("Moderate rain", "🌧️"),
+    65: ("Heavy rain", "🌧️"), 66: ("Light freezing rain", "🌧️"),
+    67: ("Heavy freezing rain", "🌧️"),
+    71: ("Slight snow", "🌨️"), 73: ("Moderate snow", "❄️"),
+    75: ("Heavy snow", "❄️"), 77: ("Snow grains", "❄️"),
+    80: ("Light showers", "🌦️"), 81: ("Moderate showers", "🌧️"),
+    82: ("Heavy showers", "🌧️"),
+    85: ("Light snow showers", "🌨️"), 86: ("Heavy snow showers", "❄️"),
+    95: ("Thunderstorm", "⛈️"), 96: ("Thunderstorm w/ hail", "⛈️"),
+    99: ("Thunderstorm w/ heavy hail", "⛈️"),
+}
+
+# ─── Fetch helpers ────────────────────────────────────────────────────
+def geocode(query: str) -> str:
+    url = f"{GEOCODE_URL}?q={urllib.parse.quote(query)}&limit=1&api_key={GEOCODE_KEY}"
+    with urllib.request.urlopen(url) as r:
+        data = json.loads(r.read())
+    return data[0]["display_name"] if data else query
+
+def fetch_daily() -> dict:
+    """Fetch daily forecast (7 days)."""
+    params = urllib.parse.urlencode({
+        "latitude": LAT, "longitude": LON, "timezone": TZ,
+        "forecast_days": 7,
+        "daily": "sunrise,sunset,temperature_2m_max,temperature_2m_min,"
+                 "wind_speed_10m_max,wind_gusts_10m_max,rain_sum,"
+                 "precipitation_probability_max,uv_index_max,"
+                 "sunshine_duration,weather_code,precipitation_sum",
+    })
+    with urllib.request.urlopen(f"{WEATHER_URL}?{params}") as r:
+        return json.loads(r.read())
+
+def fetch_current() -> dict:
+    """Fetch current weather + current-hour details."""
+    # current_weather gives temp, wind, weather code
+    params = urllib.parse.urlencode({
+        "latitude": LAT, "longitude": LON, "timezone": TZ,
+        "current_weather": "true",
+    })
+    with urllib.request.urlopen(f"{WEATHER_URL}?{params}") as r:
+        cw_data = json.loads(r.read())
+
+    # hourly for current hour gives apparent temp, humidity, pressure
+    params2 = urllib.parse.urlencode({
+        "latitude": LAT, "longitude": LON, "timezone": TZ,
+        "forecast_days": 1,
+        "hourly": "apparent_temperature,relative_humidity_2m,pressure_msl",
+    })
+    with urllib.request.urlopen(f"{WEATHER_URL}?{params2}") as r:
+        hr_data = json.loads(r.read())
+
+    # Find the current hour
+    now = datetime.now()
+    now_str = now.strftime("%Y-%m-%dT%H:%M")
+    times = hr_data.get("hourly", {}).get("time", [])
+    idx = 0
+    for i, t in enumerate(times):
+        if t >= now_str:
+            idx = i
+            break
+
+    cw = cw_data.get("current_weather", {})
+    hr = hr_data.get("hourly", {})
+    return {
+        "temperature": cw.get("temperature"),
+        "apparent_temp": hr.get("apparent_temperature", [None])[idx] if idx < len(hr.get("apparent_temperature", [])) else None,
+        "humidity": hr.get("relative_humidity_2m", [None])[idx] if idx < len(hr.get("relative_humidity_2m", [])) else None,
+        "pressure": hr.get("pressure_msl", [None])[idx] if idx < len(hr.get("pressure_msl", [])) else None,
+        "wind_speed": cw.get("windspeed"),
+        "wind_direction": cw.get("winddirection"),
+        "weather_code": cw.get("weathercode"),
+        "time": cw.get("time"),
+    }
+
+def fetch_hourly(date_str: str) -> dict:
+    """Fetch hourly data for a specific date (24h window)."""
+    params = urllib.parse.urlencode({
+        "latitude": LAT, "longitude": LON, "timezone": TZ,
+        "start_date": date_str, "end_date": date_str,
+        "hourly": "temperature_2m,apparent_temperature,weather_code,"
+                  "cloud_cover,precipitation,precipitation_probability,"
+                  "wind_speed_10m,wind_direction_10m,wind_gusts_10m,"
+                  "uv_index,relative_humidity_2m,sunshine_duration,"
+                  "pressure_msl",
+    })
+    with urllib.request.urlopen(f"{WEATHER_URL}?{params}") as r:
+        return json.loads(r.read())
+
+# ─── Data processing ─────────────────────────────────────────────────
+def process_weather():
+    location_name = geocode(LOCATION)
+    daily_data = fetch_daily()
+    current_data = fetch_current()
+
+    days = []
+    dates = daily_data["daily"]["time"]
+    for i, date in enumerate(dates):
+        dt = datetime.strptime(date, "%Y-%m-%d")
+        hourly_data = fetch_hourly(date)
+        days.append({
+            "date": date,
+            "day_name": "Today" if i == 0 else dt.strftime("%A"),
+            "short_day": "Today" if i == 0 else dt.strftime("%a %d %b"),
+            "day_num": dt.day,
+            "month": dt.strftime("%b"),
+            "is_today": i == 0,
+            "weather_code": daily_data["daily"]["weather_code"][i],
+            "temp_max": daily_data["daily"]["temperature_2m_max"][i],
+            "temp_min": daily_data["daily"]["temperature_2m_min"][i],
+            "uv_max": daily_data["daily"]["uv_index_max"][i],
+            "rain_sum": daily_data["daily"]["rain_sum"][i],
+            "precip_prob": daily_data["daily"]["precipitation_probability_max"][i],
+            "wind_max": daily_data["daily"]["wind_speed_10m_max"][i],
+            "wind_gust_max": daily_data["daily"]["wind_gusts_10m_max"][i],
+            "sunrise": daily_data["daily"]["sunrise"][i],
+            "sunset": daily_data["daily"]["sunset"][i],
+            "sunshine": daily_data["daily"]["sunshine_duration"][i] / 3600,
+            "hourly": hourly_data.get("hourly", {}),
+        })
+
+    # Current weather - fetch_current() already returns processed dict
+    current = current_data
+
+    return location_name, current, days
+
+# ─── HTML generation ─────────────────────────────────────────────────
+CSS = """
+/* ─── Reset & base ───────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0f1117;
+  --surface: #1a1d27;
+  --surface-hover: #232733;
+  --border: #2a2e3a;
+  --text: #e4e6ed;
+  --text-dim: #8b8fa3;
+  --accent: #60a5fa;
+  --accent-glow: rgba(96,165,250,0.15);
+  --rain: #38bdf8;
+  --sun: #fbbf24;
+  --wind: #a78bfa;
+  --temp-warm: #fb923c;
+  --temp-cool: #38bdf8;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+html { font-size: 16px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ─── Header ─────────────────────────────────────────────── */
+header {
+  padding: 2rem 1.5rem 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, #161922 0%, var(--bg) 100%);
+}
+header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+header .subtitle {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+header .updated {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+  opacity: 0.7;
+}
+
+/* ─── Container ──────────────────────────────────────────── */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* ─── Index: card grid ───────────────────────────────────── */
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--accent);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.card:hover {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.card:hover::before { opacity: 1; }
+
+/* Today card — taller, spans 2 rows */
+.card.today {
+  grid-row: span 2;
+  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--surface) 0%, #1e2235 100%);
+}
+.card.today::before { opacity: 1; }
+.card.today .today-label {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.75rem;
+}
+
+/* ─── Card content ───────────────────────────────────────── */
+.card-day {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.card-condition {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.card-temp {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+.card-temp .high { color: var(--temp-warm); }
+.card-temp .low { color: var(--temp-cool); }
+.card-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.card-stat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+.card-stat .label { color: var(--text-dim); }
+.card-stat .value { font-weight: 600; }
+
+/* ─── Current weather (in today's card) ──────────────────── */
+.current-section {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.current-temp {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.current-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+.current-details span { color: var(--text); font-weight: 600; }
+
+/* ─── Day detail page ────────────────────────────────────── */
+.detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin-bottom: 1.5rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: all 0.2s;
+}
+.detail-back:hover {
+  color: var(--text);
+  border-color: var(--accent);
+  text-decoration: none;
+}
+
+.detail-header {
+  margin-bottom: 2rem;
+}
+.detail-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.detail-header .condition {
+  color: var(--text-dim);
+  font-size: 1rem;
+}
+
+/* Current weather block (today only) */
+.current-block {
+  background: linear-gradient(135deg, #1e2235, var(--surface));
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.current-block .section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.75rem;
+}
+.current-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+.current-main {
+  grid-column: 1;
+}
+.current-main .big-temp {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.current-main .big-icon {
+  font-size: 3rem;
+}
+.current-meta {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+}
+.current-meta-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+.current-meta-item .lbl { color: var(--text-dim); }
+.current-meta-item .val { font-weight: 600; }
+
+/* Section cards */
+.section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+.section-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.section-label .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* Stat grid inside sections */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+.stat-item {
+  background: rgba(255,255,255,0.03);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+}
+.stat-item .stat-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+.stat-item .stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+.stat-item .stat-unit {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-left: 0.25rem;
+}
+
+/* Hourly table */
+.hourly-section {
+  margin-top: 1.5rem;
+}
+.hourly-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-sm);
+}
+.hourly-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.hourly-table th {
+  text-align: left;
+  padding: 0.6rem 0.5rem;
+  color: var(--text-dim);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--surface);
+}
+.hourly-table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  text-align: center;
+}
+.hourly-table tr:last-child td { border-bottom: none; }
+.hourly-table .time-col { color: var(--text-dim); font-weight: 600; }
+.hourly-table .icon-col { font-size: 1.25rem; }
+
+/* Bar charts */
+.bar-container {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 40px;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s;
+}
+.bar-fill.temp { background: linear-gradient(90deg, var(--temp-cool), var(--temp-warm)); }
+.bar-fill.rain { background: var(--rain); }
+.bar-fill.wind { background: var(--wind); }
+.bar-fill.sun { background: var(--sun); }
+.bar-fill.cloud { background: var(--text-dim); }
+.bar-fill.uv { background: linear-gradient(90deg, #4ade80, #fbbf24, #ef4444); }
+.bar-value {
+  font-size: 0.75rem;
+  font-weight: 600;
+  min-width: 3rem;
+  text-align: right;
+}
+
+/* ─── Footer ─────────────────────────────────────────────── */
+footer {
+  text-align: center;
+  padding: 2rem 1.5rem;
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  border-top: 1px solid var(--border);
+  margin-top: 2rem;
+}
+
+/* ─── Responsive ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .forecast-grid { grid-template-columns: repeat(2, 1fr); }
+  .card.today { grid-column: span 2; }
+  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .current-grid { grid-template-columns: 1fr; }
+  .current-meta { grid-column: 1; }
+}
+"""
+
+def wmo_info(code: int) -> tuple:
+    return WMO.get(code, (f"Code {code}", "🌡️"))
+
+def sunrise_str(iso: str) -> str:
+    dt = datetime.strptime(iso, "%Y-%m-%dT%H:%M")
+    return dt.strftime("%H:%M")
+
+def sunset_str(iso: str) -> str:
+    dt = datetime.strptime(iso, "%Y-%m-%dT%H:%M")
+    return dt.strftime("%H:%M")
+
+def fmt(val, fmt_str=".0f", default="—"):
+    """Format a numeric value, returning default if None."""
+    if val is None:
+        return default
+    return f"{val:{fmt_str}}"
+
+def wind_dir(deg: int) -> str:
+    dirs = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+            "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+    return dirs[round(deg / 22.5) % 16]
+
+def make_bar_html(pct: float, cls: str, value_str: str) -> str:
+    pct = max(0, min(100, pct))
+    return f'''<div class="bar-container">
+      <div class="bar"><div class="bar-fill {cls}" style="width:{pct}%"></div></div>
+      <span class="bar-value">{value_str}</span>
+    </div>'''
+
+def gen_css() -> str:
+    return CSS
+
+def gen_index(location_name: str, current: dict, days: list) -> str:
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
+    cw_code = current["weather_code"]
+    cw_icon, cw_desc = wmo_info(cw_code)
+
+    cards_html = ""
+    for d in days:
+        icon, desc = wmo_info(d["weather_code"])
+        date_slug = d["date"]
+        link = f'day-{date_slug}.html'
+
+        if d["is_today"]:
+            # Current weather section
+            at = current.get('apparent_temp') or current.get('temperature')
+            hu = current.get('humidity') or 0
+            ws = current.get('wind_speed') or 0
+            wd = current.get('wind_direction') or 0
+            cur_html = f'''
+<div class="current-section">
+  <div class="today-label">Now</div>
+  <div class="current-temp">{cw_icon} {d['temp_max']:.0f}°C</div>
+  <div class="current-details">
+    <div>Feels like <span>{at:.0f}°C</span></div>
+    <div>Humidity <span>{hu}%</span></div>
+    <div>Wind <span>{ws:.0f} km/h {wind_dir(wd)}</span></div>'''
+            if current.get('pressure'):
+                cur_html += f'''
+    <div>Pressure <span>{current['pressure']:.0f} hPa</span></div>'''
+            cur_html += f'''
+  </div>
+</div>'''
+        else:
+            cur_html = ""
+
+        cards_html += f'''
+<a href="{link}" class="card {'today' if d['is_today'] else ''}" style="text-decoration:none;color:inherit;">
+  {cur_html}
+  <div class="card-day">{d['short_day']}</div>
+  <div class="card-icon">{icon}</div>
+  <div class="card-condition">{desc}</div>
+  <div class="card-temp">
+    <span class="high">{d['temp_max']:.0f}°</span>
+    <span class="low">{d['temp_min']:.0f}°</span>
+  </div>
+  <div class="card-stats">
+    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">{d['rain_sum']:.1f}mm ({d['precip_prob']}%)</span></div>
+    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">{d['wind_max']:.0f}/{d['wind_gust_max']:.0f} km/h</span></div>
+    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">{d['sunshine']:.0f}h</span></div>
+    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">{d['uv_max']:.1f}</span></div>
+  </div>
+</a>'''
+
+    return f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weather in Ely</title>
+<style>{CSS}</style>
+</head>
+<body>
+<header>
+  <h1>🌤️ Ely Weather</h1>
+  <div class="subtitle">{location_name}</div>
+  <div class="updated">Generated {now_str} BST</div>
+</header>
+<div class="container">
+  <div class="forecast-grid">
+    {cards_html}
+  </div>
+</div>
+<footer>
+  Data from Open-Meteo · Static site regenerated daily
+</footer>
+</body>
+</html>'''
+
+def gen_day(location_name: str, day: dict, current: dict) -> str:
+    icon, desc = wmo_info(day["weather_code"])
+    hourly = day["hourly"]
+    times = hourly.get("time", [])
+
+    # Current weather block (only for today)
+    current_block = ""
+    if day["is_today"]:
+        cw_icon, cw_desc = wmo_info(current["weather_code"])
+        ct = current.get("temperature") or 0
+        cat = current.get("apparent_temp") or ct
+        chu = current.get("humidity") or 0
+        cws = current.get("wind_speed") or 0
+        cwd = current.get("wind_direction") or 0
+        cp = current.get("pressure") or 0
+        current_block = f'''
+<div class="current-block">
+  <div class="section-label">Current Conditions</div>
+  <div class="current-grid">
+    <div class="current-main">
+      <div class="big-icon">{cw_icon}</div>
+      <div class="big-temp">{ct:.1f}°C</div>
+      <div style="color:var(--text-dim);font-size:0.85rem;margin-top:0.25rem;">{cw_desc}</div>
+    </div>
+    <div class="current-meta">
+      <div class="current-meta-item"><span class="lbl">Feels like</span><span class="val">{cat:.1f}°C</span></div>
+      <div class="current-meta-item"><span class="lbl">Humidity</span><span class="val">{chu}%</span></div>
+      <div class="current-meta-item"><span class="lbl">Wind</span><span class="val">{cws:.0f} km/h {wind_dir(cwd)}</span></div>
+      <div class="current-meta-item"><span class="lbl">Pressure</span><span class="val">{cp:.0f} hPa</span></div>
+    </div>
+  </div>
+</div>'''
+
+    # ─── Temperature section ────────────────────────────────
+    avg_temp = (day["temp_max"] + day["temp_min"]) / 2
+    temp_range = day["temp_max"] - day["temp_min"]
+    temp_pct = min(100, max(0, ((avg_temp + 5) / 40) * 100))
+    temp_section = f'''
+<div class="section">
+  <div class="section-label"><span class="dot" style="background:var(--temp-warm)"></span> Temperature</div>
+  <div class="stat-grid">
+    <div class="stat-item">
+      <div class="stat-label">High</div>
+      <div class="stat-value">{day['temp_max']:.0f}<span class="stat-unit">°C</span></div>
+      {make_bar_html(temp_pct, 'temp', f'{day["temp_max"]:.0f}°')}
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Low</div>
+      <div class="stat-value">{day['temp_min']:.0f}<span class="stat-unit">°C</span></div>
+      {make_bar_html(max(0, temp_pct - 15), 'temp', f'{day["temp_min"]:.0f}°')}
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Average</div>
+      <div class="stat-value">{avg_temp:.0f}<span class="stat-unit">°C</span></div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Range</div>
+      <div class="stat-value">{temp_range:.0f}<span class="stat-unit">°C</span></div>
+    </div>
+  </div>
+</div>'''
+
+    # ─── Sunshine section ───────────────────────────────────
+    sun_pct = min(100, (day["sunshine"] / 17) * 100)
+    uv_pct = min(100, (day["uv_max"] / 11) * 100)
+    sun_section = f'''
+<div class="section">
+  <div class="section-label"><span class="dot" style="background:var(--sun)"></span> Sunshine & UV</div>
+  <div class="stat-grid">
+    <div class="stat-item">
+      <div class="stat-label">Sunshine</div>
+      <div class="stat-value">{day['sunshine']:.1f}<span class="stat-unit">hours</span></div>
+      {make_bar_html(sun_pct, 'sun', f'{day["sunshine"]:.1f}h')}
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">UV Index</div>
+      <div class="stat-value">{day['uv_max']:.1f}</div>
+      {make_bar_html(uv_pct, 'uv', f'{day["uv_max"]:.1f}') }
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Sunrise</div>
+      <div class="stat-value">🌅 {sunrise_str(day['sunrise'])}</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Sunset</div>
+      <div class="stat-value">🌇 {sunset_str(day['sunset'])}</div>
+    </div>
+  </div>
+</div>'''
+
+    # ─── Rain section ───────────────────────────────────────
+    rain_pct = min(100, (day["rain_sum"] / 20) * 100)
+    rain_section = f'''
+<div class="section">
+  <div class="section-label"><span class="dot" style="background:var(--rain)"></span> Rain & Precipitation</div>
+  <div class="stat-grid">
+    <div class="stat-item">
+      <div class="stat-label">Total Rain</div>
+      <div class="stat-value">{day['rain_sum']:.1f}<span class="stat-unit">mm</span></div>
+      {make_bar_html(rain_pct, 'rain', f'{day["rain_sum"]:.1f}mm')}
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Chance</div>
+      <div class="stat-value">{day['precip_prob']}<span class="stat-unit">%</span></div>
+      {make_bar_html(day['precip_prob'], 'rain', f'{day["precip_prob"]}%')}
+    </div>
+  </div>
+</div>'''
+
+    # ─── Wind section ───────────────────────────────────────
+    wind_pct = min(100, (day["wind_max"] / 60) * 100)
+    gust_pct = min(100, (day["wind_gust_max"] / 80) * 100)
+    wind_section = f'''
+<div class="section">
+  <div class="section-label"><span class="dot" style="background:var(--wind)"></span> Wind</div>
+  <div class="stat-grid">
+    <div class="stat-item">
+      <div class="stat-label">Max Speed</div>
+      <div class="stat-value">{day['wind_max']:.0f}<span class="stat-unit">km/h</span></div>
+      {make_bar_html(wind_pct, 'wind', f'{day["wind_max"]:.0f}')}
+    </div>
+    <div class="stat-item">
+      <div class="stat-label">Max Gusts</div>
+      <div class="stat-value">{day['wind_gust_max']:.0f}<span class="stat-unit">km/h</span></div>
+      {make_bar_html(gust_pct, 'wind', f'{day["wind_gust_max"]:.0f}')}
+    </div>
+  </div>
+</div>'''
+
+    # ─── Hourly table ───────────────────────────────────────
+    hourly_html = ""
+    if times:
+        rows = ""
+        for i in range(min(24, len(times))):
+            t = times[i]
+            hour = int(t[11:13])
+            tc = hourly.get("temperature_2m", [None]*24)[i] if "temperature_2m" in hourly else None
+            at = hourly.get("apparent_temperature", [None]*24)[i] if "apparent_temperature" in hourly else None
+            wc = hourly.get("weather_code", [0]*24)[i] if "weather_code" in hourly else 0
+            pr = hourly.get("precipitation", [0]*24)[i] if "precipitation" in hourly else 0
+            pp = hourly.get("precipitation_probability", [0]*24)[i] if "precipitation_probability" in hourly else 0
+            ws = hourly.get("wind_speed_10m", [0]*24)[i] if "wind_speed_10m" in hourly else 0
+            wd = hourly.get("wind_direction_10m", [0]*24)[i] if "wind_direction_10m" in hourly else 0
+            cc = hourly.get("cloud_cover", [0]*24)[i] if "cloud_cover" in hourly else 0
+            sun = hourly.get("sunshine_duration", [0]*24)[i] if "sunshine_duration" in hourly else 0
+            uv = hourly.get("uv_index", [0]*24)[i] if "uv_index" in hourly else 0
+            hu = hourly.get("relative_humidity_2m", [0]*24)[i] if "relative_humidity_2m" in hourly else 0
+
+            h_icon, h_desc = wmo_info(wc)
+            rows += f'''<tr>
+              <td class="time-col">{t[11:13]}:00</td>
+              <td class="icon-col">{h_icon}</td>
+              <td>{tc:.0f}°</td>
+              <td>{pp}%</td>
+              <td>{pr:.1f}</td>
+              <td>{ws:.0f}</td>
+              <td>{wind_dir(wd)}</td>
+              <td>{cc}%</td>
+            </tr>'''
+
+        hourly_html = f'''
+<div class="section hourly-section">
+  <div class="section-label">Hourly Forecast</div>
+  <div class="hourly-scroll">
+    <table class="hourly-table">
+      <thead>
+        <tr>
+          <th>Time</th><th></th><th>Temp</th><th>Rain %</th><th>Rain</th><th>Wind</th><th>Dir</th><th>Cloud</th>
+        </tr>
+      </thead>
+      <tbody>{rows}</tbody>
+    </table>
+  </div>
+</div>'''
+
+    return f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{day['day_name']} — Ely Weather</title>
+<style>{CSS}</style>
+</head>
+<body>
+<header>
+  <h1>🌤️ Ely Weather</h1>
+  <div class="subtitle">{location_name}</div>
+</header>
+<div class="container">
+  <a href="index.html" class="detail-back">← Back to forecast</a>
+  <div class="detail-header">
+    <h2>{icon} {day['day_name']}</h2>
+    <div class="condition">{desc}</div>
+  </div>
+  {current_block}
+  {temp_section}
+  {sun_section}
+  {rain_section}
+  {wind_section}
+  {hourly_html}
+</div>
+<footer>
+  Data from Open-Meteo · <a href="index.html">7-day forecast</a>
+</footer>
+</body>
+</html>'''
+
+# ─── Main ─────────────────────────────────────────────────────────────
+def main():
+    out_dir = Path("/tmp/ely-weather")
+    out_dir.mkdir(exist_ok=True)
+
+    print("Fetching location...")
+    location_name, current, days = process_weather()
+    print(f"  → {location_name}")
+
+    # CSS
+    print("Writing styles.css...")
+    (out_dir / "styles.css").write_text(gen_css())
+
+    # Index
+    print("Writing index.html...")
+    (out_dir / "index.html").write_text(gen_index(location_name, current, days))
+
+    # Day pages
+    for d in days:
+        path = out_dir / f"day-{d['date']}.html"
+        path.write_text(gen_day(location_name, d, current))
+        print(f"  → day-{d['date']}.html")
+
+    # CNAME for GitHub Pages custom domain (optional)
+    # (out_dir / "CNAME").write_text("ely.fr3qu3ncy.com")
+
+    # robots.txt
+    (out_dir / "robots.txt").write_text("User-agent: *\nAllow: /\n")
+
+    # .nojekyll (tell GitHub not to process with Jekyll)
+    (out_dir / ".nojekyll").write_text("")
+
+    print(f"\n✅ Site generated in {out_dir}")
+
+if __name__ == "__main__":
+    main()
