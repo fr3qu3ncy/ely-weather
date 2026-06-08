@@ -547,10 +547,100 @@ footer {
   .current-grid { grid-template-columns: 1fr; }
   .current-meta { grid-column: 1; }
 }
+
+/* ─── Live weather indicators ────────────────────────────── */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 0.4rem;
+}
+.live-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: pulse 2s infinite;
+}
+.live-badge.loading .dot { background: var(--accent); }
+.live-badge.error .dot { background: #ef4444; animation: none; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.live-temp { font-size: 3rem; font-weight: 800; line-height: 1; }
+.live-details { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-dim); }
+.live-details span { color: var(--text); font-weight: 600; }
+.live-big-temp { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+.live-meta-item { display: flex; justify-content: space-between; font-size: 0.9rem; }
+.live-meta-item .lbl { color: var(--text-dim); }
+.live-meta-item .val { font-weight: 600; }
 """
 
 def wmo_info(code: int) -> tuple:
     return WMO.get(code, (f"Code {code}", "🌡️"))
+
+# ─── Live weather JS ──────────────────────────────────────────────────
+LIVE_JS = '''<script>
+(function(){
+  var CK="ely_weather_now",CT=600000;
+  var W={0:["Clear sky","\\u2600\\ufe0f"],1:["Mainly clear","\\ud83c\\udf24\\ufe0f"],2:["Partly cloudy","\\u26c5"],3:["Overcast","\\u2601\\ufe0f"],45:["Fog","\\ud83c\\udf2b\\ufe0f"],48:["Rime fog","\\ud83c\\udf2b\\ufe0f"],51:["Light drizzle","\\ud83c\\udf26\\ufe0f"],53:["Moderate drizzle","\\ud83c\\udf26\\ufe0f"],55:["Dense drizzle","\\ud83c\\udf27\\ufe0f"],56:["Freezing drizzle","\\ud83c\\udf27\\ufe0f"],57:["Dense freezing drizzle","\\ud83c\\udf27\\ufe0f"],61:["Slight rain","\\ud83c\\udf26\\ufe0f"],63:["Moderate rain","\\ud83c\\udf27\\ufe0f"],65:["Heavy rain","\\ud83c\\udf27\\ufe0f"],66:["Freezing rain","\\ud83c\\udf27\\ufe0f"],67:["Heavy freezing rain","\\ud83c\\udf27\\ufe0f"],71:["Slight snow","\\ud83c\\udf28\\ufe0f"],73:["Moderate snow","\\u2744\\ufe0f"],75:["Heavy snow","\\u2744\\ufe0f"],77:["Snow grains","\\u2744\\ufe0f"],80:["Light showers","\\ud83c\\udf26\\ufe0f"],81:["Moderate showers","\\ud83c\\udf27\\ufe0f"],82:["Heavy showers","\\ud83c\\udf27\\ufe0f"],85:["Light snow showers","\\ud83c\\udf28\\ufe0f"],86:["Heavy snow showers","\\u2744\\ufe0f"],95:["Thunderstorm","\\u26c8\\ufe0f"],96:["Thunderstorm w/ hail","\\u26c8\\ufe0f"],99:["Severe thunderstorm","\\u26c8\\ufe0f"]};
+  var D=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+  function wd(d){return D[Math.round(d/22.5)%16]}
+  function wmo(c){return W[c]||["Unknown","\\ud83c\\udf21\\ufe0f"]}
+  function ts(){return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}
+  function updI(d){
+    var b=document.getElementById("live-badge-index"),t=document.getElementById("live-temp-index"),
+        f=document.getElementById("live-feels-index"),h=document.getElementById("live-humid-index"),
+        w=document.getElementById("live-wind-index"),p=document.getElementById("live-pressure-index");
+    if(!t)return;var c=wmo(d.code);
+    if(b){b.className="live-badge";b.innerHTML='<span class="dot"></span> Updated '+ts()}
+    if(t)t.textContent=c[1]+" "+Math.round(d.temp)+"\\u00b0C";
+    if(f)f.textContent=Math.round(d.ap)+"\\u00b0C";
+    if(h)h.textContent=d.hu+"%";
+    if(w)w.textContent=d.ws+" km/h "+wd(d.wd);
+    if(p&&d.pr!==null)p.textContent=Math.round(d.pr)+" hPa";
+  }
+  function updD(d){
+    var b=document.getElementById("live-badge-day"),ic=document.getElementById("live-icon-day"),
+        t=document.getElementById("live-temp-day"),de=document.getElementById("live-desc-day"),
+        f=document.getElementById("live-feels-day"),h=document.getElementById("live-humid-day"),
+        w=document.getElementById("live-wind-day"),p=document.getElementById("live-pressure-day");
+    if(!t&&!ic)return;var c=wmo(d.code);
+    if(b){b.className="live-badge";b.innerHTML='<span class="dot"></span> Updated '+ts()}
+    if(ic)ic.textContent=c[1];if(t)t.textContent=d.temp.toFixed(1)+"\\u00b0C";
+    if(de)de.textContent=c[0];if(f)f.textContent=d.ap.toFixed(1)+"\\u00b0C";
+    if(h)h.textContent=d.hu+"%";if(w)w.textContent=d.ws+" km/h "+wd(d.wd);
+    if(p&&d.pr!==null)p.textContent=Math.round(d.pr)+" hPa";
+  }
+  function hc(){try{var c=localStorage.getItem(CK);if(!c)return false;
+    var j=JSON.parse(c);if(Date.now()-j.ts>CT)return false;
+    if(document.getElementById("live-temp-index"))updI(j);
+    if(document.getElementById("live-temp-day"))updD(j);return true}catch(e){return false}}
+  async function go(){
+    try{var r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=52.25&longitude=0.15&timezone=Europe%2FLondon&current_weather=true&hourly=apparent_temperature,relative_humidity_2m,pressure_msl&forecast_days=1");
+      var d=await r.json(),now=new Date(),ns=now.toISOString().slice(0,13);
+      var tm=d.hourly?d.hourly.time:[],ix=0;
+      for(var i=0;i<tm.length;i++){if(tm[i]>=ns){ix=i;break}}
+      var cw=d.current_weather||{},hr=d.hourly||{};
+      var data={temp:cw.temperature,code:cw.weathercode,ws:cw.windspeed,wd:cw.winddirection,
+        ap:(hr.apparent_temperature&&hr.apparent_temperature[ix])??cw.temperature,
+        hu:(hr.relative_humidity_2m&&hr.relative_humidity_2m[ix])??0,
+        pr:(hr.pressure_msl&&hr.pressure_msl[ix])??null};
+      localStorage.setItem(CK,JSON.stringify({ts:Date.now(),temp:data.temp,code:data.code,ws:data.ws,wd:data.wd,ap:data.ap,hu:data.hu,pr:data.pr}));
+      if(document.getElementById("live-temp-index"))updI(data);
+      if(document.getElementById("live-temp-day"))updD(data);
+    }catch(e){
+      var bi=document.getElementById("live-badge-index"),bd=document.getElementById("live-badge-day");
+      if(bi){bi.className="live-badge error";bi.innerHTML='<span class="dot"></span> Live data unavailable'}
+      if(bd){bd.className="live-badge error";bd.innerHTML='<span class="dot"></span> Live data unavailable'}
+    }
+  }
+  if(!hc())go();
+})();
+</script>'''
 
 def sunrise_str(iso: str) -> str:
     dt = datetime.strptime(iso, "%Y-%m-%dT%H:%M")
@@ -593,22 +683,23 @@ def gen_index(location_name: str, current: dict, days: list) -> str:
         link = f'day-{date_slug}.html'
 
         if d["is_today"]:
-            # Current weather section
+            # Current weather section — static fallback, JS updates live
             at = current.get('apparent_temp') or current.get('temperature')
             hu = current.get('humidity') or 0
             ws = current.get('wind_speed') or 0
             wd = current.get('wind_direction') or 0
             cur_html = f'''
-<div class="current-section">
+<div class="current-section" id="live-current-index">
   <div class="today-label">Now</div>
-  <div class="current-temp">{cw_icon} {d['temp_max']:.0f}°C</div>
-  <div class="current-details">
-    <div>Feels like <span>{at:.0f}°C</span></div>
-    <div>Humidity <span>{hu}%</span></div>
-    <div>Wind <span>{ws:.0f} km/h {wind_dir(wd)}</span></div>'''
+  <div class="live-badge loading" id="live-badge-index"><span class="dot"></span> Loading live data…</div>
+  <div class="live-temp" id="live-temp-index">{cw_icon} {d['temp_max']:.0f}°C</div>
+  <div class="live-details" id="live-details-index">
+    <div>Feels like <span id="live-feels-index">{at:.0f}°C</span></div>
+    <div>Humidity <span id="live-humid-index">{hu}%</span></div>
+    <div>Wind <span id="live-wind-index">{ws:.0f} km/h {wind_dir(wd)}</span></div>'''
             if current.get('pressure'):
                 cur_html += f'''
-    <div>Pressure <span>{current['pressure']:.0f} hPa</span></div>'''
+    <div>Pressure <span id="live-pressure-index">{current['pressure']:.0f} hPa</span></div>'''
             cur_html += f'''
   </div>
 </div>'''
@@ -653,8 +744,9 @@ def gen_index(location_name: str, current: dict, days: list) -> str:
   </div>
 </div>
 <footer>
-  Data from Open-Meteo · Static site regenerated daily
+  Data from Open-Meteo · Static site regenerated hourly · Current weather updates live
 </footer>
+{LIVE_JS}
 </body>
 </html>'''
 
@@ -663,7 +755,7 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
     hourly = day["hourly"]
     times = hourly.get("time", [])
 
-    # Current weather block (only for today)
+    # Current weather block (only for today) — static fallback, JS updates live
     current_block = ""
     if day["is_today"]:
         cw_icon, cw_desc = wmo_info(current["weather_code"])
@@ -674,19 +766,20 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
         cwd = current.get("wind_direction") or 0
         cp = current.get("pressure") or 0
         current_block = f'''
-<div class="current-block">
+<div class="current-block" id="live-current-day">
   <div class="section-label">Current Conditions</div>
+  <div class="live-badge loading" id="live-badge-day"><span class="dot"></span> Loading live data…</div>
   <div class="current-grid">
     <div class="current-main">
-      <div class="big-icon">{cw_icon}</div>
-      <div class="big-temp">{ct:.1f}°C</div>
-      <div style="color:var(--text-dim);font-size:0.85rem;margin-top:0.25rem;">{cw_desc}</div>
+      <div class="big-icon" id="live-icon-day">{cw_icon}</div>
+      <div class="live-big-temp" id="live-temp-day">{ct:.1f}°C</div>
+      <div style="color:var(--text-dim);font-size:0.85rem;margin-top:0.25rem;" id="live-desc-day">{cw_desc}</div>
     </div>
     <div class="current-meta">
-      <div class="current-meta-item"><span class="lbl">Feels like</span><span class="val">{cat:.1f}°C</span></div>
-      <div class="current-meta-item"><span class="lbl">Humidity</span><span class="val">{chu}%</span></div>
-      <div class="current-meta-item"><span class="lbl">Wind</span><span class="val">{cws:.0f} km/h {wind_dir(cwd)}</span></div>
-      <div class="current-meta-item"><span class="lbl">Pressure</span><span class="val">{cp:.0f} hPa</span></div>
+      <div class="live-meta-item"><span class="lbl">Feels like</span><span class="val" id="live-feels-day">{cat:.1f}°C</span></div>
+      <div class="live-meta-item"><span class="lbl">Humidity</span><span class="val" id="live-humid-day">{chu}%</span></div>
+      <div class="live-meta-item"><span class="lbl">Wind</span><span class="val" id="live-wind-day">{cws:.0f} km/h {wind_dir(cwd)}</span></div>
+      <div class="live-meta-item"><span class="lbl">Pressure</span><span class="val" id="live-pressure-day">{cp:.0f} hPa</span></div>
     </div>
   </div>
 </div>'''
@@ -862,6 +955,7 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
 <footer>
   Data from Open-Meteo · <a href="index.html">7-day forecast</a>
 </footer>
+{LIVE_JS}
 </body>
 </html>'''
 

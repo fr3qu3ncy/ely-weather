@@ -399,27 +399,58 @@ footer {
   .current-grid { grid-template-columns: 1fr; }
   .current-meta { grid-column: 1; }
 }
+
+/* ─── Live weather indicators ────────────────────────────── */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 0.4rem;
+}
+.live-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: pulse 2s infinite;
+}
+.live-badge.loading .dot { background: var(--accent); }
+.live-badge.error .dot { background: #ef4444; animation: none; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.live-temp { font-size: 3rem; font-weight: 800; line-height: 1; }
+.live-details { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-dim); }
+.live-details span { color: var(--text); font-weight: 600; }
+.live-big-temp { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+.live-meta-item { display: flex; justify-content: space-between; font-size: 0.9rem; }
+.live-meta-item .lbl { color: var(--text-dim); }
+.live-meta-item .val { font-weight: 600; }
 </style>
 </head>
 <body>
 <header>
   <h1>🌤️ Ely Weather</h1>
   <div class="subtitle">Ely, East Cambridgeshire, Cambridgeshire, Cambridgeshire and Peterborough, England, United Kingdom</div>
-  <div class="updated">Generated 2026-06-08 19:12 BST</div>
+  <div class="updated">Generated 2026-06-08 22:33 BST</div>
 </header>
 <div class="container">
   <div class="forecast-grid">
     
 <a href="day-2026-06-08.html" class="card today" style="text-decoration:none;color:inherit;">
   
-<div class="current-section">
+<div class="current-section" id="live-current-index">
   <div class="today-label">Now</div>
-  <div class="current-temp">Light drizzle 16°C</div>
-  <div class="current-details">
-    <div>Feels like <span>12°C</span></div>
-    <div>Humidity <span>78%</span></div>
-    <div>Wind <span>23 km/h NW</span></div>
-    <div>Pressure <span>1012 hPa</span></div>
+  <div class="live-badge loading" id="live-badge-index"><span class="dot"></span> Loading live data…</div>
+  <div class="live-temp" id="live-temp-index">Overcast 16°C</div>
+  <div class="live-details" id="live-details-index">
+    <div>Feels like <span id="live-feels-index">11°C</span></div>
+    <div>Humidity <span id="live-humid-index">83%</span></div>
+    <div>Wind <span id="live-wind-index">10 km/h WSW</span></div>
+    <div>Pressure <span id="live-pressure-index">1013 hPa</span></div>
   </div>
 </div>
   <div class="card-day">Today</div>
@@ -430,73 +461,73 @@ footer {
     <span class="low">12°</span>
   </div>
   <div class="card-stats">
-    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">9.7mm (100%)</span></div>
-    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">23/41 km/h</span></div>
-    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">3h</span></div>
+    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">8.9mm (100%)</span></div>
+    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">18/32 km/h</span></div>
+    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">6h</span></div>
     <div class="card-stat"><span class="label">🔆 UV</span><span class="value">3.2</span></div>
   </div>
 </a>
 <a href="day-2026-06-09.html" class="card " style="text-decoration:none;color:inherit;">
   
   <div class="card-day">Tue 09 Jun</div>
-  <div class="card-icon">Light drizzle</div>
+  <div class="card-icon">Moderate drizzle</div>
+  <div class="card-condition">🌦️</div>
+  <div class="card-temp">
+    <span class="high">17°</span>
+    <span class="low">9°</span>
+  </div>
+  <div class="card-stats">
+    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">1.0mm (86%)</span></div>
+    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">29/53 km/h</span></div>
+    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">12h</span></div>
+    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">4.7</span></div>
+  </div>
+</a>
+<a href="day-2026-06-10.html" class="card " style="text-decoration:none;color:inherit;">
+  
+  <div class="card-day">Wed 10 Jun</div>
+  <div class="card-icon">Slight rain</div>
+  <div class="card-condition">🌦️</div>
+  <div class="card-temp">
+    <span class="high">17°</span>
+    <span class="low">9°</span>
+  </div>
+  <div class="card-stats">
+    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">4.6mm (98%)</span></div>
+    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">29/51 km/h</span></div>
+    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">8h</span></div>
+    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">3.7</span></div>
+  </div>
+</a>
+<a href="day-2026-06-11.html" class="card " style="text-decoration:none;color:inherit;">
+  
+  <div class="card-day">Thu 11 Jun</div>
+  <div class="card-icon">Moderate drizzle</div>
   <div class="card-condition">🌦️</div>
   <div class="card-temp">
     <span class="high">18°</span>
     <span class="low">9°</span>
   </div>
   <div class="card-stats">
-    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">0.4mm (86%)</span></div>
-    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">30/53 km/h</span></div>
-    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">16h</span></div>
-    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">5.3</span></div>
-  </div>
-</a>
-<a href="day-2026-06-10.html" class="card " style="text-decoration:none;color:inherit;">
-  
-  <div class="card-day">Wed 10 Jun</div>
-  <div class="card-icon">Moderate rain</div>
-  <div class="card-condition">🌧️</div>
-  <div class="card-temp">
-    <span class="high">16°</span>
-    <span class="low">9°</span>
-  </div>
-  <div class="card-stats">
-    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">3.3mm (98%)</span></div>
-    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">23/44 km/h</span></div>
-    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">11h</span></div>
-    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">3.2</span></div>
-  </div>
-</a>
-<a href="day-2026-06-11.html" class="card " style="text-decoration:none;color:inherit;">
-  
-  <div class="card-day">Thu 11 Jun</div>
-  <div class="card-icon">Slight rain</div>
-  <div class="card-condition">🌦️</div>
-  <div class="card-temp">
-    <span class="high">19°</span>
-    <span class="low">9°</span>
-  </div>
-  <div class="card-stats">
-    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">7.2mm (80%)</span></div>
-    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">24/42 km/h</span></div>
-    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">6h</span></div>
+    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">2.1mm (80%)</span></div>
+    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">25/45 km/h</span></div>
+    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">4h</span></div>
     <div class="card-stat"><span class="label">🔆 UV</span><span class="value">4.8</span></div>
   </div>
 </a>
 <a href="day-2026-06-12.html" class="card " style="text-decoration:none;color:inherit;">
   
   <div class="card-day">Fri 12 Jun</div>
-  <div class="card-icon">Light drizzle</div>
-  <div class="card-condition">🌦️</div>
+  <div class="card-icon">Overcast</div>
+  <div class="card-condition">☁️</div>
   <div class="card-temp">
     <span class="high">22°</span>
-    <span class="low">14°</span>
+    <span class="low">15°</span>
   </div>
   <div class="card-stats">
-    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">0.3mm (20%)</span></div>
-    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">22/40 km/h</span></div>
-    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">15h</span></div>
+    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">0.0mm (20%)</span></div>
+    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">27/50 km/h</span></div>
+    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">13h</span></div>
     <div class="card-stat"><span class="label">🔆 UV</span><span class="value">4.9</span></div>
   </div>
 </a>
@@ -507,11 +538,11 @@ footer {
   <div class="card-condition">☁️</div>
   <div class="card-temp">
     <span class="high">24°</span>
-    <span class="low">12°</span>
+    <span class="low">15°</span>
   </div>
   <div class="card-stats">
     <div class="card-stat"><span class="label">💧 Rain</span><span class="value">0.0mm (1%)</span></div>
-    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">13/27 km/h</span></div>
+    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">17/30 km/h</span></div>
     <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">16h</span></div>
     <div class="card-stat"><span class="label">🔆 UV</span><span class="value">5.8</span></div>
   </div>
@@ -519,15 +550,15 @@ footer {
 <a href="day-2026-06-14.html" class="card " style="text-decoration:none;color:inherit;">
   
   <div class="card-day">Sun 14 Jun</div>
-  <div class="card-icon">Overcast</div>
-  <div class="card-condition">☁️</div>
+  <div class="card-icon">Partly cloudy</div>
+  <div class="card-condition">⛅</div>
   <div class="card-temp">
     <span class="high">27°</span>
-    <span class="low">16°</span>
+    <span class="low">14°</span>
   </div>
   <div class="card-stats">
     <div class="card-stat"><span class="label">💧 Rain</span><span class="value">0.0mm (16%)</span></div>
-    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">10/17 km/h</span></div>
+    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">12/26 km/h</span></div>
     <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">16h</span></div>
     <div class="card-stat"><span class="label">🔆 UV</span><span class="value">5.8</span></div>
   </div>
@@ -535,7 +566,65 @@ footer {
   </div>
 </div>
 <footer>
-  Data from Open-Meteo · Static site regenerated daily
+  Data from Open-Meteo · Static site regenerated hourly · Current weather updates live
 </footer>
+<script>
+(function(){
+  var CK="ely_weather_now",CT=600000;
+  var W={0:["Clear sky","\u2600\ufe0f"],1:["Mainly clear","\ud83c\udf24\ufe0f"],2:["Partly cloudy","\u26c5"],3:["Overcast","\u2601\ufe0f"],45:["Fog","\ud83c\udf2b\ufe0f"],48:["Rime fog","\ud83c\udf2b\ufe0f"],51:["Light drizzle","\ud83c\udf26\ufe0f"],53:["Moderate drizzle","\ud83c\udf26\ufe0f"],55:["Dense drizzle","\ud83c\udf27\ufe0f"],56:["Freezing drizzle","\ud83c\udf27\ufe0f"],57:["Dense freezing drizzle","\ud83c\udf27\ufe0f"],61:["Slight rain","\ud83c\udf26\ufe0f"],63:["Moderate rain","\ud83c\udf27\ufe0f"],65:["Heavy rain","\ud83c\udf27\ufe0f"],66:["Freezing rain","\ud83c\udf27\ufe0f"],67:["Heavy freezing rain","\ud83c\udf27\ufe0f"],71:["Slight snow","\ud83c\udf28\ufe0f"],73:["Moderate snow","\u2744\ufe0f"],75:["Heavy snow","\u2744\ufe0f"],77:["Snow grains","\u2744\ufe0f"],80:["Light showers","\ud83c\udf26\ufe0f"],81:["Moderate showers","\ud83c\udf27\ufe0f"],82:["Heavy showers","\ud83c\udf27\ufe0f"],85:["Light snow showers","\ud83c\udf28\ufe0f"],86:["Heavy snow showers","\u2744\ufe0f"],95:["Thunderstorm","\u26c8\ufe0f"],96:["Thunderstorm w/ hail","\u26c8\ufe0f"],99:["Severe thunderstorm","\u26c8\ufe0f"]};
+  var D=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+  function wd(d){return D[Math.round(d/22.5)%16]}
+  function wmo(c){return W[c]||["Unknown","\ud83c\udf21\ufe0f"]}
+  function ts(){return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}
+  function updI(d){
+    var b=document.getElementById("live-badge-index"),t=document.getElementById("live-temp-index"),
+        f=document.getElementById("live-feels-index"),h=document.getElementById("live-humid-index"),
+        w=document.getElementById("live-wind-index"),p=document.getElementById("live-pressure-index");
+    if(!t)return;var c=wmo(d.code);
+    if(b){b.className="live-badge";b.innerHTML='<span class="dot"></span> Updated '+ts()}
+    if(t)t.textContent=c[1]+" "+Math.round(d.temp)+"\u00b0C";
+    if(f)f.textContent=Math.round(d.ap)+"\u00b0C";
+    if(h)h.textContent=d.hu+"%";
+    if(w)w.textContent=d.ws+" km/h "+wd(d.wd);
+    if(p&&d.pr!==null)p.textContent=Math.round(d.pr)+" hPa";
+  }
+  function updD(d){
+    var b=document.getElementById("live-badge-day"),ic=document.getElementById("live-icon-day"),
+        t=document.getElementById("live-temp-day"),de=document.getElementById("live-desc-day"),
+        f=document.getElementById("live-feels-day"),h=document.getElementById("live-humid-day"),
+        w=document.getElementById("live-wind-day"),p=document.getElementById("live-pressure-day");
+    if(!t&&!ic)return;var c=wmo(d.code);
+    if(b){b.className="live-badge";b.innerHTML='<span class="dot"></span> Updated '+ts()}
+    if(ic)ic.textContent=c[1];if(t)t.textContent=d.temp.toFixed(1)+"\u00b0C";
+    if(de)de.textContent=c[0];if(f)f.textContent=d.ap.toFixed(1)+"\u00b0C";
+    if(h)h.textContent=d.hu+"%";if(w)w.textContent=d.ws+" km/h "+wd(d.wd);
+    if(p&&d.pr!==null)p.textContent=Math.round(d.pr)+" hPa";
+  }
+  function hc(){try{var c=localStorage.getItem(CK);if(!c)return false;
+    var j=JSON.parse(c);if(Date.now()-j.ts>CT)return false;
+    if(document.getElementById("live-temp-index"))updI(j);
+    if(document.getElementById("live-temp-day"))updD(j);return true}catch(e){return false}}
+  async function go(){
+    try{var r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=52.25&longitude=0.15&timezone=Europe%2FLondon&current_weather=true&hourly=apparent_temperature,relative_humidity_2m,pressure_msl&forecast_days=1");
+      var d=await r.json(),now=new Date(),ns=now.toISOString().slice(0,13);
+      var tm=d.hourly?d.hourly.time:[],ix=0;
+      for(var i=0;i<tm.length;i++){if(tm[i]>=ns){ix=i;break}}
+      var cw=d.current_weather||{},hr=d.hourly||{};
+      var data={temp:cw.temperature,code:cw.weathercode,ws:cw.windspeed,wd:cw.winddirection,
+        ap:(hr.apparent_temperature&&hr.apparent_temperature[ix])??cw.temperature,
+        hu:(hr.relative_humidity_2m&&hr.relative_humidity_2m[ix])??0,
+        pr:(hr.pressure_msl&&hr.pressure_msl[ix])??null};
+      localStorage.setItem(CK,JSON.stringify({ts:Date.now(),temp:data.temp,code:data.code,ws:data.ws,wd:data.wd,ap:data.ap,hu:data.hu,pr:data.pr}));
+      if(document.getElementById("live-temp-index"))updI(data);
+      if(document.getElementById("live-temp-day"))updD(data);
+    }catch(e){
+      var bi=document.getElementById("live-badge-index"),bd=document.getElementById("live-badge-day");
+      if(bi){bi.className="live-badge error";bi.innerHTML='<span class="dot"></span> Live data unavailable'}
+      if(bd){bd.className="live-badge error";bd.innerHTML='<span class="dot"></span> Live data unavailable'}
+    }
+  }
+  if(!hc())go();
+})();
+</script>
 </body>
 </html>

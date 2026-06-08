@@ -399,6 +399,36 @@ footer {
   .current-grid { grid-template-columns: 1fr; }
   .current-meta { grid-column: 1; }
 }
+
+/* ─── Live weather indicators ────────────────────────────── */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 0.4rem;
+}
+.live-badge .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ade80;
+  animation: pulse 2s infinite;
+}
+.live-badge.loading .dot { background: var(--accent); }
+.live-badge.error .dot { background: #ef4444; animation: none; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.live-temp { font-size: 3rem; font-weight: 800; line-height: 1; }
+.live-details { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-dim); }
+.live-details span { color: var(--text); font-weight: 600; }
+.live-big-temp { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+.live-meta-item { display: flex; justify-content: space-between; font-size: 0.9rem; }
+.live-meta-item .lbl { color: var(--text-dim); }
+.live-meta-item .val { font-weight: 600; }
 </style>
 </head>
 <body>
@@ -409,8 +439,8 @@ footer {
 <div class="container">
   <a href="index.html" class="detail-back">← Back to forecast</a>
   <div class="detail-header">
-    <h2>Moderate rain Wednesday</h2>
-    <div class="condition">🌧️</div>
+    <h2>Slight rain Wednesday</h2>
+    <div class="condition">🌦️</div>
   </div>
   
   
@@ -419,17 +449,17 @@ footer {
   <div class="stat-grid">
     <div class="stat-item">
       <div class="stat-label">High</div>
-      <div class="stat-value">16<span class="stat-unit">°C</span></div>
+      <div class="stat-value">17<span class="stat-unit">°C</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill temp" style="width:44.5%"></div></div>
-      <span class="bar-value">16°</span>
+      <div class="bar"><div class="bar-fill temp" style="width:45.12500000000001%"></div></div>
+      <span class="bar-value">17°</span>
     </div>
     </div>
     <div class="stat-item">
       <div class="stat-label">Low</div>
       <div class="stat-value">9<span class="stat-unit">°C</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill temp" style="width:29.5%"></div></div>
+      <div class="bar"><div class="bar-fill temp" style="width:30.125000000000007%"></div></div>
       <span class="bar-value">9°</span>
     </div>
     </div>
@@ -439,7 +469,7 @@ footer {
     </div>
     <div class="stat-item">
       <div class="stat-label">Range</div>
-      <div class="stat-value">7<span class="stat-unit">°C</span></div>
+      <div class="stat-value">8<span class="stat-unit">°C</span></div>
     </div>
   </div>
 </div>
@@ -449,18 +479,18 @@ footer {
   <div class="stat-grid">
     <div class="stat-item">
       <div class="stat-label">Sunshine</div>
-      <div class="stat-value">11.0<span class="stat-unit">hours</span></div>
+      <div class="stat-value">7.7<span class="stat-unit">hours</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill sun" style="width:64.62204248366014%"></div></div>
-      <span class="bar-value">11.0h</span>
+      <div class="bar"><div class="bar-fill sun" style="width:45.32647058823529%"></div></div>
+      <span class="bar-value">7.7h</span>
     </div>
     </div>
     <div class="stat-item">
       <div class="stat-label">UV Index</div>
-      <div class="stat-value">3.2</div>
+      <div class="stat-value">3.7</div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill uv" style="width:29.090909090909093%"></div></div>
-      <span class="bar-value">3.2</span>
+      <div class="bar"><div class="bar-fill uv" style="width:33.63636363636363%"></div></div>
+      <span class="bar-value">3.7</span>
     </div>
     </div>
     <div class="stat-item">
@@ -479,10 +509,10 @@ footer {
   <div class="stat-grid">
     <div class="stat-item">
       <div class="stat-label">Total Rain</div>
-      <div class="stat-value">3.3<span class="stat-unit">mm</span></div>
+      <div class="stat-value">4.6<span class="stat-unit">mm</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill rain" style="width:16.599999999999998%"></div></div>
-      <span class="bar-value">3.3mm</span>
+      <div class="bar"><div class="bar-fill rain" style="width:23.0%"></div></div>
+      <span class="bar-value">4.6mm</span>
     </div>
     </div>
     <div class="stat-item">
@@ -501,18 +531,18 @@ footer {
   <div class="stat-grid">
     <div class="stat-item">
       <div class="stat-label">Max Speed</div>
-      <div class="stat-value">23<span class="stat-unit">km/h</span></div>
+      <div class="stat-value">29<span class="stat-unit">km/h</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill wind" style="width:38.99999999999999%"></div></div>
-      <span class="bar-value">23</span>
+      <div class="bar"><div class="bar-fill wind" style="width:48.666666666666664%"></div></div>
+      <span class="bar-value">29</span>
     </div>
     </div>
     <div class="stat-item">
       <div class="stat-label">Max Gusts</div>
-      <div class="stat-value">44<span class="stat-unit">km/h</span></div>
+      <div class="stat-value">51<span class="stat-unit">km/h</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill wind" style="width:55.375%"></div></div>
-      <span class="bar-value">44</span>
+      <div class="bar"><div class="bar-fill wind" style="width:63.5%"></div></div>
+      <span class="bar-value">51</span>
     </div>
     </div>
   </div>
@@ -529,220 +559,220 @@ footer {
       </thead>
       <tbody><tr>
               <td class="time-col">00:00</td>
-              <td class="icon-col">Clear sky</td>
-              <td>11°</td>
+              <td class="icon-col">Mainly clear</td>
+              <td>12°</td>
               <td>0%</td>
               <td>0.0</td>
-              <td>10</td>
+              <td>16</td>
               <td>WSW</td>
-              <td>0%</td>
+              <td>31%</td>
             </tr><tr>
               <td class="time-col">01:00</td>
-              <td class="icon-col">Mainly clear</td>
-              <td>10°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>11</td>
-              <td>WSW</td>
-              <td>43%</td>
-            </tr><tr>
-              <td class="time-col">02:00</td>
               <td class="icon-col">Clear sky</td>
               <td>10°</td>
               <td>0%</td>
               <td>0.0</td>
               <td>14</td>
               <td>WSW</td>
-              <td>16%</td>
+              <td>6%</td>
             </tr><tr>
-              <td class="time-col">03:00</td>
-              <td class="icon-col">Mainly clear</td>
-              <td>9°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>11</td>
-              <td>SW</td>
-              <td>48%</td>
-            </tr><tr>
-              <td class="time-col">04:00</td>
-              <td class="icon-col">Overcast</td>
+              <td class="time-col">02:00</td>
+              <td class="icon-col">Partly cloudy</td>
               <td>10°</td>
               <td>0%</td>
               <td>0.0</td>
-              <td>10</td>
+              <td>12</td>
+              <td>SW</td>
+              <td>79%</td>
+            </tr><tr>
+              <td class="time-col">03:00</td>
+              <td class="icon-col">Overcast</td>
+              <td>9°</td>
+              <td>0%</td>
+              <td>0.0</td>
+              <td>13</td>
+              <td>SW</td>
+              <td>97%</td>
+            </tr><tr>
+              <td class="time-col">04:00</td>
+              <td class="icon-col">Overcast</td>
+              <td>9°</td>
+              <td>0%</td>
+              <td>0.0</td>
+              <td>14</td>
               <td>WSW</td>
-              <td>83%</td>
+              <td>100%</td>
             </tr><tr>
               <td class="time-col">05:00</td>
               <td class="icon-col">Overcast</td>
               <td>10°</td>
               <td>0%</td>
               <td>0.0</td>
-              <td>11</td>
+              <td>13</td>
               <td>SW</td>
-              <td>95%</td>
+              <td>100%</td>
             </tr><tr>
               <td class="time-col">06:00</td>
-              <td class="icon-col">Overcast</td>
-              <td>10°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>14</td>
-              <td>SW</td>
-              <td>96%</td>
-            </tr><tr>
-              <td class="time-col">07:00</td>
               <td class="icon-col">Overcast</td>
               <td>11°</td>
               <td>0%</td>
               <td>0.0</td>
-              <td>15</td>
+              <td>16</td>
               <td>WSW</td>
-              <td>81%</td>
+              <td>88%</td>
+            </tr><tr>
+              <td class="time-col">07:00</td>
+              <td class="icon-col">Partly cloudy</td>
+              <td>11°</td>
+              <td>0%</td>
+              <td>0.0</td>
+              <td>17</td>
+              <td>WSW</td>
+              <td>73%</td>
             </tr><tr>
               <td class="time-col">08:00</td>
               <td class="icon-col">Overcast</td>
               <td>12°</td>
               <td>0%</td>
               <td>0.0</td>
-              <td>14</td>
-              <td>W</td>
-              <td>100%</td>
+              <td>16</td>
+              <td>WSW</td>
+              <td>98%</td>
             </tr><tr>
               <td class="time-col">09:00</td>
-              <td class="icon-col">Light drizzle</td>
-              <td>12°</td>
+              <td class="icon-col">Overcast</td>
+              <td>13°</td>
               <td>0%</td>
-              <td>0.1</td>
-              <td>14</td>
-              <td>W</td>
+              <td>0.0</td>
+              <td>15</td>
+              <td>WSW</td>
               <td>100%</td>
             </tr><tr>
               <td class="time-col">10:00</td>
-              <td class="icon-col">Light drizzle</td>
-              <td>13°</td>
+              <td class="icon-col">Overcast</td>
+              <td>14°</td>
               <td>2%</td>
-              <td>0.1</td>
-              <td>14</td>
-              <td>WNW</td>
-              <td>98%</td>
+              <td>0.0</td>
+              <td>16</td>
+              <td>WSW</td>
+              <td>100%</td>
             </tr><tr>
               <td class="time-col">11:00</td>
-              <td class="icon-col">Light drizzle</td>
+              <td class="icon-col">Overcast</td>
               <td>14°</td>
               <td>19%</td>
-              <td>0.1</td>
-              <td>10</td>
-              <td>SW</td>
-              <td>88%</td>
+              <td>0.0</td>
+              <td>18</td>
+              <td>WSW</td>
+              <td>100%</td>
             </tr><tr>
               <td class="time-col">12:00</td>
               <td class="icon-col">Overcast</td>
-              <td>15°</td>
+              <td>16°</td>
               <td>43%</td>
               <td>0.0</td>
-              <td>12</td>
-              <td>W</td>
-              <td>82%</td>
+              <td>17</td>
+              <td>WSW</td>
+              <td>100%</td>
             </tr><tr>
               <td class="time-col">13:00</td>
-              <td class="icon-col">Light drizzle</td>
+              <td class="icon-col">Overcast</td>
               <td>15°</td>
               <td>63%</td>
-              <td>0.2</td>
-              <td>13</td>
-              <td>W</td>
+              <td>0.0</td>
+              <td>22</td>
+              <td>WSW</td>
               <td>100%</td>
             </tr><tr>
               <td class="time-col">14:00</td>
               <td class="icon-col">Overcast</td>
-              <td>16°</td>
+              <td>17°</td>
               <td>78%</td>
               <td>0.0</td>
-              <td>14</td>
-              <td>W</td>
-              <td>100%</td>
+              <td>18</td>
+              <td>SW</td>
+              <td>80%</td>
             </tr><tr>
               <td class="time-col">15:00</td>
               <td class="icon-col">Light drizzle</td>
-              <td>16°</td>
+              <td>13°</td>
               <td>89%</td>
               <td>0.2</td>
-              <td>10</td>
+              <td>29</td>
               <td>W</td>
               <td>100%</td>
             </tr><tr>
               <td class="time-col">16:00</td>
               <td class="icon-col">Light drizzle</td>
-              <td>15°</td>
+              <td>13°</td>
               <td>96%</td>
               <td>0.2</td>
-              <td>23</td>
+              <td>13</td>
               <td>WSW</td>
               <td>100%</td>
             </tr><tr>
               <td class="time-col">17:00</td>
-              <td class="icon-col">Moderate rain</td>
+              <td class="icon-col">Slight rain</td>
               <td>12°</td>
               <td>98%</td>
-              <td>3.6</td>
+              <td>2.0</td>
               <td>8</td>
-              <td>NW</td>
-              <td>94%</td>
+              <td>SW</td>
+              <td>97%</td>
             </tr><tr>
               <td class="time-col">18:00</td>
-              <td class="icon-col">Moderate drizzle</td>
-              <td>13°</td>
+              <td class="icon-col">Slight rain</td>
+              <td>11°</td>
               <td>95%</td>
-              <td>0.3</td>
-              <td>11</td>
-              <td>WSW</td>
-              <td>73%</td>
+              <td>1.7</td>
+              <td>4</td>
+              <td>NNW</td>
+              <td>100%</td>
             </tr><tr>
               <td class="time-col">19:00</td>
-              <td class="icon-col">Moderate rain</td>
-              <td>13°</td>
+              <td class="icon-col">Light drizzle</td>
+              <td>12°</td>
               <td>86%</td>
-              <td>0.7</td>
+              <td>0.1</td>
               <td>13</td>
-              <td>W</td>
-              <td>42%</td>
+              <td>SW</td>
+              <td>100%</td>
             </tr><tr>
               <td class="time-col">20:00</td>
-              <td class="icon-col">Clear sky</td>
-              <td>13°</td>
+              <td class="icon-col">Moderate drizzle</td>
+              <td>12°</td>
               <td>68%</td>
-              <td>0.0</td>
-              <td>12</td>
+              <td>0.7</td>
+              <td>10</td>
               <td>W</td>
-              <td>4%</td>
+              <td>68%</td>
             </tr><tr>
               <td class="time-col">21:00</td>
-              <td class="icon-col">Clear sky</td>
+              <td class="icon-col">Overcast</td>
               <td>11°</td>
               <td>44%</td>
               <td>0.0</td>
               <td>10</td>
-              <td>W</td>
-              <td>0%</td>
+              <td>WSW</td>
+              <td>43%</td>
             </tr><tr>
               <td class="time-col">22:00</td>
-              <td class="icon-col">Clear sky</td>
+              <td class="icon-col">Overcast</td>
               <td>10°</td>
               <td>24%</td>
               <td>0.0</td>
-              <td>9</td>
-              <td>W</td>
-              <td>0%</td>
+              <td>10</td>
+              <td>WSW</td>
+              <td>25%</td>
             </tr><tr>
               <td class="time-col">23:00</td>
-              <td class="icon-col">Mainly clear</td>
-              <td>9°</td>
+              <td class="icon-col">Clear sky</td>
+              <td>10°</td>
               <td>12%</td>
               <td>0.0</td>
-              <td>9</td>
+              <td>10</td>
               <td>WSW</td>
-              <td>29%</td>
+              <td>11%</td>
             </tr></tbody>
     </table>
   </div>
@@ -751,5 +781,63 @@ footer {
 <footer>
   Data from Open-Meteo · <a href="index.html">7-day forecast</a>
 </footer>
+<script>
+(function(){
+  var CK="ely_weather_now",CT=600000;
+  var W={0:["Clear sky","\u2600\ufe0f"],1:["Mainly clear","\ud83c\udf24\ufe0f"],2:["Partly cloudy","\u26c5"],3:["Overcast","\u2601\ufe0f"],45:["Fog","\ud83c\udf2b\ufe0f"],48:["Rime fog","\ud83c\udf2b\ufe0f"],51:["Light drizzle","\ud83c\udf26\ufe0f"],53:["Moderate drizzle","\ud83c\udf26\ufe0f"],55:["Dense drizzle","\ud83c\udf27\ufe0f"],56:["Freezing drizzle","\ud83c\udf27\ufe0f"],57:["Dense freezing drizzle","\ud83c\udf27\ufe0f"],61:["Slight rain","\ud83c\udf26\ufe0f"],63:["Moderate rain","\ud83c\udf27\ufe0f"],65:["Heavy rain","\ud83c\udf27\ufe0f"],66:["Freezing rain","\ud83c\udf27\ufe0f"],67:["Heavy freezing rain","\ud83c\udf27\ufe0f"],71:["Slight snow","\ud83c\udf28\ufe0f"],73:["Moderate snow","\u2744\ufe0f"],75:["Heavy snow","\u2744\ufe0f"],77:["Snow grains","\u2744\ufe0f"],80:["Light showers","\ud83c\udf26\ufe0f"],81:["Moderate showers","\ud83c\udf27\ufe0f"],82:["Heavy showers","\ud83c\udf27\ufe0f"],85:["Light snow showers","\ud83c\udf28\ufe0f"],86:["Heavy snow showers","\u2744\ufe0f"],95:["Thunderstorm","\u26c8\ufe0f"],96:["Thunderstorm w/ hail","\u26c8\ufe0f"],99:["Severe thunderstorm","\u26c8\ufe0f"]};
+  var D=["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+  function wd(d){return D[Math.round(d/22.5)%16]}
+  function wmo(c){return W[c]||["Unknown","\ud83c\udf21\ufe0f"]}
+  function ts(){return new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"})}
+  function updI(d){
+    var b=document.getElementById("live-badge-index"),t=document.getElementById("live-temp-index"),
+        f=document.getElementById("live-feels-index"),h=document.getElementById("live-humid-index"),
+        w=document.getElementById("live-wind-index"),p=document.getElementById("live-pressure-index");
+    if(!t)return;var c=wmo(d.code);
+    if(b){b.className="live-badge";b.innerHTML='<span class="dot"></span> Updated '+ts()}
+    if(t)t.textContent=c[1]+" "+Math.round(d.temp)+"\u00b0C";
+    if(f)f.textContent=Math.round(d.ap)+"\u00b0C";
+    if(h)h.textContent=d.hu+"%";
+    if(w)w.textContent=d.ws+" km/h "+wd(d.wd);
+    if(p&&d.pr!==null)p.textContent=Math.round(d.pr)+" hPa";
+  }
+  function updD(d){
+    var b=document.getElementById("live-badge-day"),ic=document.getElementById("live-icon-day"),
+        t=document.getElementById("live-temp-day"),de=document.getElementById("live-desc-day"),
+        f=document.getElementById("live-feels-day"),h=document.getElementById("live-humid-day"),
+        w=document.getElementById("live-wind-day"),p=document.getElementById("live-pressure-day");
+    if(!t&&!ic)return;var c=wmo(d.code);
+    if(b){b.className="live-badge";b.innerHTML='<span class="dot"></span> Updated '+ts()}
+    if(ic)ic.textContent=c[1];if(t)t.textContent=d.temp.toFixed(1)+"\u00b0C";
+    if(de)de.textContent=c[0];if(f)f.textContent=d.ap.toFixed(1)+"\u00b0C";
+    if(h)h.textContent=d.hu+"%";if(w)w.textContent=d.ws+" km/h "+wd(d.wd);
+    if(p&&d.pr!==null)p.textContent=Math.round(d.pr)+" hPa";
+  }
+  function hc(){try{var c=localStorage.getItem(CK);if(!c)return false;
+    var j=JSON.parse(c);if(Date.now()-j.ts>CT)return false;
+    if(document.getElementById("live-temp-index"))updI(j);
+    if(document.getElementById("live-temp-day"))updD(j);return true}catch(e){return false}}
+  async function go(){
+    try{var r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=52.25&longitude=0.15&timezone=Europe%2FLondon&current_weather=true&hourly=apparent_temperature,relative_humidity_2m,pressure_msl&forecast_days=1");
+      var d=await r.json(),now=new Date(),ns=now.toISOString().slice(0,13);
+      var tm=d.hourly?d.hourly.time:[],ix=0;
+      for(var i=0;i<tm.length;i++){if(tm[i]>=ns){ix=i;break}}
+      var cw=d.current_weather||{},hr=d.hourly||{};
+      var data={temp:cw.temperature,code:cw.weathercode,ws:cw.windspeed,wd:cw.winddirection,
+        ap:(hr.apparent_temperature&&hr.apparent_temperature[ix])??cw.temperature,
+        hu:(hr.relative_humidity_2m&&hr.relative_humidity_2m[ix])??0,
+        pr:(hr.pressure_msl&&hr.pressure_msl[ix])??null};
+      localStorage.setItem(CK,JSON.stringify({ts:Date.now(),temp:data.temp,code:data.code,ws:data.ws,wd:data.wd,ap:data.ap,hu:data.hu,pr:data.pr}));
+      if(document.getElementById("live-temp-index"))updI(data);
+      if(document.getElementById("live-temp-day"))updD(data);
+    }catch(e){
+      var bi=document.getElementById("live-badge-index"),bd=document.getElementById("live-badge-day");
+      if(bi){bi.className="live-badge error";bi.innerHTML='<span class="dot"></span> Live data unavailable'}
+      if(bd){bd.className="live-badge error";bd.innerHTML='<span class="dot"></span> Live data unavailable'}
+    }
+  }
+  if(!hc())go();
+})();
+</script>
 </body>
 </html>
