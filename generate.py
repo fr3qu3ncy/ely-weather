@@ -473,7 +473,7 @@ header .updated {
 .hourly-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
 }
 .hour-card {
   display: grid;
@@ -482,6 +482,30 @@ header .updated {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  transition: all 0.3s ease;
+}
+.hour-card.current-hour {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 4px 16px rgba(96,165,250,0.2);
+  background: linear-gradient(135deg, #1e2235, var(--surface));
+}
+.hour-card.current-hour .hour-time {
+  color: var(--accent);
+}
+.hour-now-badge {
+  display: none;
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+}
+.hour-card.current-hour .hour-now-badge {
+  display: inline-block;
 }
 .hour-left {
   display: flex;
@@ -493,9 +517,9 @@ header .updated {
   gap: 0.2rem;
 }
 .hour-time {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-dim);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
 }
 .hour-icon {
   font-size: 1.5rem;
@@ -710,6 +734,19 @@ LIVE_JS = '''<script>
     }
   }
   if(!hc())go();
+})();
+</script>'''
+
+CURRENT_HOUR_JS = '''<script>
+(function(){
+  function highlightNow(){
+    var h=String(new Date().getHours()).padStart(2,"0");
+    document.querySelectorAll(".hour-card.current-hour").forEach(function(c){c.classList.remove("current-hour")});
+    var card=document.querySelector('.hour-card[data-hour="'+h+'"]');
+    if(card)card.classList.add("current-hour");
+  }
+  highlightNow();
+  setInterval(highlightNow,60000);
 })();
 </script>'''
 
@@ -1034,8 +1071,9 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
 
             h_icon, h_desc = wmo_info(wc)
 
-            cards += f'''<div class="hour-card">
+            cards += f'''<div class="hour-card" data-hour="{t[11:13]}">
               <div class="hour-left">
+                <span class="hour-now-badge">NOW</span>
                 <span class="hour-time">{t[11:13]}:00</span>
                 <span class="hour-icon">{h_icon}</span>
               </div>
@@ -1127,6 +1165,7 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
   Data from Open-Meteo · <a href="index.html">7-day forecast</a>
 </footer>
 {LIVE_JS}
+{CURRENT_HOUR_JS}
 </body>
 </html>'''
 

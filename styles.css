@@ -319,7 +319,7 @@ header .updated {
 .hourly-list {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
 }
 .hour-card {
   display: grid;
@@ -328,6 +328,30 @@ header .updated {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  transition: all 0.3s ease;
+}
+.hour-card.current-hour {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent), 0 4px 16px rgba(96,165,250,0.2);
+  background: linear-gradient(135deg, #1e2235, var(--surface));
+}
+.hour-card.current-hour .hour-time {
+  color: var(--accent);
+}
+.hour-now-badge {
+  display: none;
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+}
+.hour-card.current-hour .hour-now-badge {
+  display: inline-block;
 }
 .hour-left {
   display: flex;
@@ -339,9 +363,9 @@ header .updated {
   gap: 0.2rem;
 }
 .hour-time {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--text-dim);
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
 }
 .hour-icon {
   font-size: 1.5rem;
