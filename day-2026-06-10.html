@@ -310,6 +310,8 @@ header .updated {
   font-size: 1.25rem;
   font-weight: 700;
 }
+.stat-item .stat-value.temp-warm { color: var(--temp-warm); }
+.stat-item .stat-value.temp-cool { color: var(--temp-cool); }
 .stat-item .stat-unit {
   font-size: 0.75rem;
   color: var(--text-dim);
@@ -371,7 +373,8 @@ header .updated {
   border-radius: 3px;
   transition: width 0.3s;
 }
-.bar-fill.temp { background: linear-gradient(90deg, var(--temp-cool), var(--temp-warm)); }
+.bar-fill.temp-high { background: var(--temp-warm); }
+.bar-fill.temp-low { background: var(--temp-cool); }
 .bar-fill.rain { background: var(--rain); }
 .bar-fill.wind { background: var(--wind); }
 .bar-fill.sun { background: var(--sun); }
@@ -452,17 +455,17 @@ footer {
   <div class="stat-grid">
     <div class="stat-item">
       <div class="stat-label">High</div>
-      <div class="stat-value">15<span class="stat-unit">°C</span></div>
+      <div class="stat-value temp-warm">16<span class="stat-unit">°C</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill temp" style="width:43.0%"></div></div>
-      <span class="bar-value">15°</span>
+      <div class="bar"><div class="bar-fill temp-high" style="width:52.0%"></div></div>
+      <span class="bar-value">16°</span>
     </div>
     </div>
     <div class="stat-item">
       <div class="stat-label">Low</div>
-      <div class="stat-value">9<span class="stat-unit">°C</span></div>
+      <div class="stat-value temp-cool">9<span class="stat-unit">°C</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill temp" style="width:28.0%"></div></div>
+      <div class="bar"><div class="bar-fill temp-low" style="width:35.5%"></div></div>
       <span class="bar-value">9°</span>
     </div>
     </div>
@@ -472,7 +475,7 @@ footer {
     </div>
     <div class="stat-item">
       <div class="stat-label">Range</div>
-      <div class="stat-value">6<span class="stat-unit">°C</span></div>
+      <div class="stat-value">7<span class="stat-unit">°C</span></div>
     </div>
   </div>
 </div>
@@ -482,18 +485,18 @@ footer {
   <div class="stat-grid">
     <div class="stat-item">
       <div class="stat-label">Sunshine</div>
-      <div class="stat-value">3.7<span class="stat-unit">hours</span></div>
+      <div class="stat-value">9.5<span class="stat-unit">hours</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill sun" style="width:21.703333333333337%"></div></div>
-      <span class="bar-value">3.7h</span>
+      <div class="bar"><div class="bar-fill sun" style="width:56.16661764705883%"></div></div>
+      <span class="bar-value">9.5h</span>
     </div>
     </div>
     <div class="stat-item">
       <div class="stat-label">UV Index</div>
-      <div class="stat-value">4.7</div>
+      <div class="stat-value">4.5</div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill uv" style="width:42.27272727272728%"></div></div>
-      <span class="bar-value">4.7</span>
+      <div class="bar"><div class="bar-fill uv" style="width:41.36363636363637%"></div></div>
+      <span class="bar-value">4.5</span>
     </div>
     </div>
     <div class="stat-item">
@@ -512,10 +515,10 @@ footer {
   <div class="stat-grid">
     <div class="stat-item">
       <div class="stat-label">Total Rain</div>
-      <div class="stat-value">7.0<span class="stat-unit">mm</span></div>
+      <div class="stat-value">5.0<span class="stat-unit">mm</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill rain" style="width:35.0%"></div></div>
-      <span class="bar-value">7.0mm</span>
+      <div class="bar"><div class="bar-fill rain" style="width:25.0%"></div></div>
+      <span class="bar-value">5.0mm</span>
     </div>
     </div>
     <div class="stat-item">
@@ -534,18 +537,18 @@ footer {
   <div class="stat-grid">
     <div class="stat-item">
       <div class="stat-label">Max Speed</div>
-      <div class="stat-value">28<span class="stat-unit">km/h</span></div>
+      <div class="stat-value">16<span class="stat-unit">km/h</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill wind" style="width:46.166666666666664%"></div></div>
-      <span class="bar-value">28</span>
+      <div class="bar"><div class="bar-fill wind" style="width:26.999999999999996%"></div></div>
+      <span class="bar-value">16</span>
     </div>
     </div>
     <div class="stat-item">
       <div class="stat-label">Max Gusts</div>
-      <div class="stat-value">49<span class="stat-unit">km/h</span></div>
+      <div class="stat-value">31<span class="stat-unit">km/h</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill wind" style="width:61.625%"></div></div>
-      <span class="bar-value">49</span>
+      <div class="bar"><div class="bar-fill wind" style="width:38.25%"></div></div>
+      <span class="bar-value">31</span>
     </div>
     </div>
   </div>
@@ -562,56 +565,56 @@ footer {
       </thead>
       <tbody><tr>
               <td class="time-col">00:00</td>
-              <td class="icon-col">🌤️</td>
+              <td class="icon-col">☁️</td>
               <td>11°</td>
               <td>0%</td>
               <td>0.0</td>
-              <td>14</td>
+              <td>16</td>
               <td>WSW</td>
-              <td>23%</td>
+              <td>91%</td>
             </tr><tr>
               <td class="time-col">01:00</td>
-              <td class="icon-col">☁️</td>
+              <td class="icon-col">☀️</td>
               <td>10°</td>
               <td>0%</td>
               <td>0.0</td>
-              <td>14</td>
-              <td>SW</td>
-              <td>95%</td>
+              <td>16</td>
+              <td>WSW</td>
+              <td>0%</td>
             </tr><tr>
               <td class="time-col">02:00</td>
-              <td class="icon-col">🌤️</td>
+              <td class="icon-col">☀️</td>
               <td>10°</td>
               <td>0%</td>
               <td>0.0</td>
               <td>14</td>
               <td>WSW</td>
-              <td>24%</td>
+              <td>0%</td>
             </tr><tr>
               <td class="time-col">03:00</td>
-              <td class="icon-col">☀️</td>
+              <td class="icon-col">⛅</td>
+              <td>9°</td>
+              <td>0%</td>
+              <td>0.0</td>
+              <td>13</td>
+              <td>WSW</td>
+              <td>52%</td>
+            </tr><tr>
+              <td class="time-col">04:00</td>
+              <td class="icon-col">⛅</td>
+              <td>10°</td>
+              <td>0%</td>
+              <td>0.0</td>
+              <td>14</td>
+              <td>WSW</td>
+              <td>69%</td>
+            </tr><tr>
+              <td class="time-col">05:00</td>
+              <td class="icon-col">☁️</td>
               <td>9°</td>
               <td>0%</td>
               <td>0.0</td>
               <td>14</td>
-              <td>WSW</td>
-              <td>2%</td>
-            </tr><tr>
-              <td class="time-col">04:00</td>
-              <td class="icon-col">☁️</td>
-              <td>10°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>14</td>
-              <td>WSW</td>
-              <td>95%</td>
-            </tr><tr>
-              <td class="time-col">05:00</td>
-              <td class="icon-col">☁️</td>
-              <td>10°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>15</td>
               <td>WSW</td>
               <td>100%</td>
             </tr><tr>
@@ -622,133 +625,133 @@ footer {
               <td>0.0</td>
               <td>13</td>
               <td>WSW</td>
-              <td>88%</td>
+              <td>93%</td>
             </tr><tr>
               <td class="time-col">07:00</td>
               <td class="icon-col">☁️</td>
               <td>11°</td>
               <td>0%</td>
               <td>0.0</td>
-              <td>14</td>
+              <td>13</td>
               <td>WSW</td>
               <td>100%</td>
             </tr><tr>
               <td class="time-col">08:00</td>
-              <td class="icon-col">☁️</td>
+              <td class="icon-col">🌦️</td>
               <td>12°</td>
               <td>0%</td>
-              <td>0.0</td>
+              <td>0.1</td>
+              <td>13</td>
+              <td>WSW</td>
+              <td>98%</td>
+            </tr><tr>
+              <td class="time-col">09:00</td>
+              <td class="icon-col">🌦️</td>
+              <td>12°</td>
+              <td>2%</td>
+              <td>0.2</td>
               <td>14</td>
               <td>W</td>
               <td>100%</td>
             </tr><tr>
-              <td class="time-col">09:00</td>
-              <td class="icon-col">☁️</td>
-              <td>13°</td>
-              <td>2%</td>
-              <td>0.0</td>
-              <td>15</td>
-              <td>W</td>
-              <td>95%</td>
-            </tr><tr>
               <td class="time-col">10:00</td>
-              <td class="icon-col">☁️</td>
+              <td class="icon-col">🌦️</td>
               <td>13°</td>
               <td>8%</td>
-              <td>0.0</td>
-              <td>15</td>
+              <td>0.1</td>
+              <td>14</td>
               <td>W</td>
-              <td>100%</td>
+              <td>91%</td>
             </tr><tr>
               <td class="time-col">11:00</td>
-              <td class="icon-col">🌧️</td>
-              <td>14°</td>
+              <td class="icon-col">☁️</td>
+              <td>15°</td>
               <td>24%</td>
-              <td>1.2</td>
-              <td>19</td>
-              <td>WSW</td>
+              <td>0.0</td>
+              <td>13</td>
+              <td>W</td>
               <td>100%</td>
             </tr><tr>
               <td class="time-col">12:00</td>
-              <td class="icon-col">⛅</td>
+              <td class="icon-col">🌦️</td>
               <td>14°</td>
               <td>45%</td>
-              <td>0.0</td>
-              <td>17</td>
-              <td>SSW</td>
-              <td>74%</td>
+              <td>0.1</td>
+              <td>16</td>
+              <td>SW</td>
+              <td>83%</td>
             </tr><tr>
               <td class="time-col">13:00</td>
-              <td class="icon-col">☁️</td>
-              <td>15°</td>
+              <td class="icon-col">🌦️</td>
+              <td>13°</td>
               <td>63%</td>
-              <td>0.0</td>
-              <td>12</td>
+              <td>0.6</td>
+              <td>9</td>
               <td>SW</td>
-              <td>91%</td>
+              <td>100%</td>
             </tr><tr>
               <td class="time-col">14:00</td>
-              <td class="icon-col">☁️</td>
-              <td>15°</td>
+              <td class="icon-col">🌦️</td>
+              <td>16°</td>
               <td>77%</td>
-              <td>0.0</td>
-              <td>28</td>
-              <td>WSW</td>
-              <td>95%</td>
+              <td>0.4</td>
+              <td>9</td>
+              <td>W</td>
+              <td>96%</td>
             </tr><tr>
               <td class="time-col">15:00</td>
-              <td class="icon-col">🌧️</td>
+              <td class="icon-col">🌦️</td>
               <td>13°</td>
               <td>88%</td>
-              <td>1.2</td>
-              <td>19</td>
-              <td>SW</td>
+              <td>0.8</td>
+              <td>10</td>
+              <td>W</td>
               <td>100%</td>
             </tr><tr>
               <td class="time-col">16:00</td>
               <td class="icon-col">🌦️</td>
-              <td>12°</td>
+              <td>13°</td>
               <td>96%</td>
-              <td>1.3</td>
-              <td>12</td>
-              <td>W</td>
+              <td>0.3</td>
+              <td>16</td>
+              <td>WSW</td>
               <td>100%</td>
             </tr><tr>
               <td class="time-col">17:00</td>
               <td class="icon-col">🌦️</td>
-              <td>12°</td>
+              <td>13°</td>
               <td>100%</td>
-              <td>0.7</td>
-              <td>9</td>
-              <td>W</td>
+              <td>0.9</td>
+              <td>12</td>
+              <td>NW</td>
               <td>100%</td>
             </tr><tr>
               <td class="time-col">18:00</td>
               <td class="icon-col">🌦️</td>
               <td>12°</td>
               <td>100%</td>
-              <td>2.2</td>
+              <td>1.5</td>
               <td>8</td>
-              <td>W</td>
-              <td>100%</td>
+              <td>WNW</td>
+              <td>74%</td>
             </tr><tr>
               <td class="time-col">19:00</td>
-              <td class="icon-col">🌦️</td>
-              <td>12°</td>
+              <td class="icon-col">🌤️</td>
+              <td>13°</td>
               <td>96%</td>
-              <td>0.4</td>
+              <td>0.0</td>
               <td>10</td>
               <td>W</td>
-              <td>79%</td>
+              <td>23%</td>
             </tr><tr>
               <td class="time-col">20:00</td>
-              <td class="icon-col">☁️</td>
-              <td>12°</td>
+              <td class="icon-col">🌤️</td>
+              <td>13°</td>
               <td>79%</td>
               <td>0.0</td>
-              <td>8</td>
-              <td>WSW</td>
-              <td>93%</td>
+              <td>13</td>
+              <td>W</td>
+              <td>39%</td>
             </tr><tr>
               <td class="time-col">21:00</td>
               <td class="icon-col">☁️</td>
@@ -756,26 +759,26 @@ footer {
               <td>54%</td>
               <td>0.0</td>
               <td>9</td>
-              <td>WSW</td>
-              <td>95%</td>
+              <td>W</td>
+              <td>86%</td>
             </tr><tr>
               <td class="time-col">22:00</td>
-              <td class="icon-col">⛅</td>
+              <td class="icon-col">☁️</td>
               <td>11°</td>
               <td>33%</td>
               <td>0.0</td>
               <td>10</td>
               <td>W</td>
-              <td>74%</td>
+              <td>88%</td>
             </tr><tr>
               <td class="time-col">23:00</td>
-              <td class="icon-col">☁️</td>
-              <td>10°</td>
+              <td class="icon-col">⛅</td>
+              <td>11°</td>
               <td>19%</td>
               <td>0.0</td>
-              <td>11</td>
+              <td>10</td>
               <td>WSW</td>
-              <td>92%</td>
+              <td>50%</td>
             </tr></tbody>
     </table>
   </div>

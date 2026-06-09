@@ -304,6 +304,8 @@ header .updated {
   font-size: 1.25rem;
   font-weight: 700;
 }
+.stat-item .stat-value.temp-warm { color: var(--temp-warm); }
+.stat-item .stat-value.temp-cool { color: var(--temp-cool); }
 .stat-item .stat-unit {
   font-size: 0.75rem;
   color: var(--text-dim);
@@ -365,7 +367,8 @@ header .updated {
   border-radius: 3px;
   transition: width 0.3s;
 }
-.bar-fill.temp { background: linear-gradient(90deg, var(--temp-cool), var(--temp-warm)); }
+.bar-fill.temp-high { background: var(--temp-warm); }
+.bar-fill.temp-low { background: var(--temp-cool); }
 .bar-fill.rain { background: var(--rain); }
 .bar-fill.wind { background: var(--wind); }
 .bar-fill.sun { background: var(--sun); }

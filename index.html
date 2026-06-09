@@ -310,6 +310,8 @@ header .updated {
   font-size: 1.25rem;
   font-weight: 700;
 }
+.stat-item .stat-value.temp-warm { color: var(--temp-warm); }
+.stat-item .stat-value.temp-cool { color: var(--temp-cool); }
 .stat-item .stat-unit {
   font-size: 0.75rem;
   color: var(--text-dim);
@@ -371,7 +373,8 @@ header .updated {
   border-radius: 3px;
   transition: width 0.3s;
 }
-.bar-fill.temp { background: linear-gradient(90deg, var(--temp-cool), var(--temp-warm)); }
+.bar-fill.temp-high { background: var(--temp-warm); }
+.bar-fill.temp-low { background: var(--temp-cool); }
 .bar-fill.rain { background: var(--rain); }
 .bar-fill.wind { background: var(--wind); }
 .bar-fill.sun { background: var(--sun); }
@@ -438,7 +441,7 @@ footer {
 <header>
   <h1>🌤️ Ely Weather</h1>
   <div class="subtitle">Ely, East Cambridgeshire, Cambridgeshire, Cambridgeshire and Peterborough, England, United Kingdom</div>
-  <div class="updated">Generated 2026-06-09 10:03 BST</div>
+  <div class="updated">Generated 2026-06-09 11:39 BST</div>
 </header>
 <div class="container">
   <div class="forecast-grid">
@@ -448,26 +451,26 @@ footer {
 <div class="current-section" id="live-current-index">
   <div class="today-label">Now</div>
   <div class="live-badge loading" id="live-badge-index"><span class="dot"></span> Loading live data…</div>
-  <div class="live-temp" id="live-temp-index">☁️ 17°C</div>
+  <div class="live-temp" id="live-temp-index">🌦️ 17°C</div>
   <div class="live-details" id="live-details-index">
-    <div>Feels like <span id="live-feels-index">10°C</span></div>
-    <div>Humidity <span id="live-humid-index">73%</span></div>
-    <div>Wind <span id="live-wind-index">21 km/h SW</span></div>
+    <div>Feels like <span id="live-feels-index">12°C</span></div>
+    <div>Humidity <span id="live-humid-index">80%</span></div>
+    <div>Wind <span id="live-wind-index">18 km/h WSW</span></div>
     <div>Pressure <span id="live-pressure-index">1013 hPa</span></div>
   </div>
 </div>
   <div class="card-day">Today</div>
   <div class="card-icon">🌦️</div>
-  <div class="card-condition">Light showers</div>
+  <div class="card-condition">Drizzle</div>
   <div class="card-temp">
     <span class="high">17°</span>
     <span class="low">8°</span>
   </div>
   <div class="card-stats">
-    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">3.8mm (84%)</span></div>
-    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">28/51 km/h</span></div>
+    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">3.5mm (84%)</span></div>
+    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">26/47 km/h</span></div>
     <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">9h</span></div>
-    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">5.7</span></div>
+    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">5.5</span></div>
   </div>
 </a>
 <a href="day-2026-06-10.html" class="card " style="text-decoration:none;color:inherit;">
@@ -476,14 +479,14 @@ footer {
   <div class="card-icon">🌦️</div>
   <div class="card-condition">Light rain</div>
   <div class="card-temp">
-    <span class="high">15°</span>
+    <span class="high">16°</span>
     <span class="low">9°</span>
   </div>
   <div class="card-stats">
-    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">7.0mm (100%)</span></div>
-    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">28/49 km/h</span></div>
-    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">4h</span></div>
-    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">4.7</span></div>
+    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">5.0mm (100%)</span></div>
+    <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">16/31 km/h</span></div>
+    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">10h</span></div>
+    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">4.5</span></div>
   </div>
 </a>
 <a href="day-2026-06-11.html" class="card " style="text-decoration:none;color:inherit;">
@@ -496,10 +499,10 @@ footer {
     <span class="low">9°</span>
   </div>
   <div class="card-stats">
-    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">5.0mm (88%)</span></div>
+    <div class="card-stat"><span class="label">💧 Rain</span><span class="value">5.2mm (88%)</span></div>
     <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">27/48 km/h</span></div>
-    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">3h</span></div>
-    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">5.2</span></div>
+    <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">2h</span></div>
+    <div class="card-stat"><span class="label">🔆 UV</span><span class="value">1.5</span></div>
   </div>
 </a>
 <a href="day-2026-06-12.html" class="card " style="text-decoration:none;color:inherit;">

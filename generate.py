@@ -458,6 +458,8 @@ header .updated {
   font-size: 1.25rem;
   font-weight: 700;
 }
+.stat-item .stat-value.temp-warm { color: var(--temp-warm); }
+.stat-item .stat-value.temp-cool { color: var(--temp-cool); }
 .stat-item .stat-unit {
   font-size: 0.75rem;
   color: var(--text-dim);
@@ -519,7 +521,8 @@ header .updated {
   border-radius: 3px;
   transition: width 0.3s;
 }
-.bar-fill.temp { background: linear-gradient(90deg, var(--temp-cool), var(--temp-warm)); }
+.bar-fill.temp-high { background: var(--temp-warm); }
+.bar-fill.temp-low { background: var(--temp-cool); }
 .bar-fill.rain { background: var(--rain); }
 .bar-fill.wind { background: var(--wind); }
 .bar-fill.sun { background: var(--sun); }
@@ -790,20 +793,21 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
     # ─── Temperature section ────────────────────────────────
     avg_temp = (day["temp_max"] + day["temp_min"]) / 2
     temp_range = day["temp_max"] - day["temp_min"]
-    temp_pct = min(100, max(0, ((avg_temp + 5) / 40) * 100))
+    high_pct = min(100, max(0, ((day["temp_max"] + 5) / 40) * 100))
+    low_pct = min(100, max(0, ((day["temp_min"] + 5) / 40) * 100))
     temp_section = f'''
 <div class="section">
   <div class="section-label"><span class="dot" style="background:var(--temp-warm)"></span> Temperature</div>
   <div class="stat-grid">
     <div class="stat-item">
       <div class="stat-label">High</div>
-      <div class="stat-value">{day['temp_max']:.0f}<span class="stat-unit">°C</span></div>
-      {make_bar_html(temp_pct, 'temp', f'{day["temp_max"]:.0f}°')}
+      <div class="stat-value temp-warm">{day['temp_max']:.0f}<span class="stat-unit">°C</span></div>
+      {make_bar_html(high_pct, 'temp-high', f'{day["temp_max"]:.0f}°')}
     </div>
     <div class="stat-item">
       <div class="stat-label">Low</div>
-      <div class="stat-value">{day['temp_min']:.0f}<span class="stat-unit">°C</span></div>
-      {make_bar_html(max(0, temp_pct - 15), 'temp', f'{day["temp_min"]:.0f}°')}
+      <div class="stat-value temp-cool">{day['temp_min']:.0f}<span class="stat-unit">°C</span></div>
+      {make_bar_html(low_pct, 'temp-low', f'{day["temp_min"]:.0f}°')}
     </div>
     <div class="stat-item">
       <div class="stat-label">Average</div>
