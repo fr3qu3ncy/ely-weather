@@ -23,19 +23,19 @@ WMO = {
     0: ("Clear sky", "☀️"), 1: ("Mainly clear", "🌤️"),
     2: ("Partly cloudy", "⛅"), 3: ("Overcast", "☁️"),
     45: ("Fog", "🌫️"), 48: ("Rime fog", "🌫️"),
-    51: ("Light drizzle", "🌦️"), 53: ("Moderate drizzle", "🌦️"),
+    51: ("Light drizzle", "🌦️"), 53: ("Drizzle", "🌦️"),
     55: ("Dense drizzle", "🌧️"),
-    56: ("Light freezing drizzle", "🌧️"), 57: ("Dense freezing drizzle", "🌧️"),
-    61: ("Slight rain", "🌦️"), 63: ("Moderate rain", "🌧️"),
-    65: ("Heavy rain", "🌧️"), 66: ("Light freezing rain", "🌧️"),
-    67: ("Heavy freezing rain", "🌧️"),
-    71: ("Slight snow", "🌨️"), 73: ("Moderate snow", "❄️"),
+    56: ("Freezing drizzle", "🌧️"), 57: ("Freezing drizzle", "🌧️"),
+    61: ("Light rain", "🌦️"), 63: ("Rain", "🌧️"),
+    65: ("Heavy rain", "🌧️"), 66: ("Freezing rain", "🌧️"),
+    67: ("Freezing rain", "🌧️"),
+    71: ("Light snow", "🌨️"), 73: ("Snow", "❄️"),
     75: ("Heavy snow", "❄️"), 77: ("Snow grains", "❄️"),
-    80: ("Light showers", "🌦️"), 81: ("Moderate showers", "🌧️"),
+    80: ("Light showers", "🌦️"), 81: ("Showers", "🌧️"),
     82: ("Heavy showers", "🌧️"),
     85: ("Light snow showers", "🌨️"), 86: ("Heavy snow showers", "❄️"),
     95: ("Thunderstorm", "⛈️"), 96: ("Thunderstorm w/ hail", "⛈️"),
-    99: ("Thunderstorm w/ heavy hail", "⛈️"),
+    99: ("Severe thunderstorm", "⛈️"),
 }
 
 # ─── Fetch helpers ────────────────────────────────────────────────────
@@ -281,9 +281,12 @@ header .updated {
   margin-bottom: 0.5rem;
 }
 .card-condition {
-  font-size: 0.85rem;
+  font-size: 0.72rem;
   color: var(--text-dim);
   margin-bottom: 0.75rem;
+  line-height: 1.3;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 .card-temp {
   font-size: 1.5rem;
@@ -580,7 +583,7 @@ footer {
 """
 
 def wmo_info(code: int) -> tuple:
-    return WMO.get(code, (f"Code {code}", "🌡️"))
+    return WMO.get(code, (f"Code {code}", "🌡️"))[::-1]
 
 # ─── Live weather JS ──────────────────────────────────────────────────
 LIVE_JS = '''<script>

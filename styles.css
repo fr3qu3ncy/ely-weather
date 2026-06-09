@@ -127,9 +127,12 @@ header .updated {
   margin-bottom: 0.5rem;
 }
 .card-condition {
-  font-size: 0.85rem;
+  font-size: 0.72rem;
   color: var(--text-dim);
   margin-bottom: 0.75rem;
+  line-height: 1.3;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 .card-temp {
   font-size: 1.5rem;
