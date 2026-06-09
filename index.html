@@ -362,18 +362,32 @@ header .updated {
 /* Past hours: washed out, compact (temp, feels, wind, gust only) */
 .hour-card.past-hour {
   opacity: 0.35;
-  transform: scaleY(0.88);
-  transform-origin: center top;
-  margin-bottom: -4px;
 }
 .hour-card.past-hour .hour-metric-detail {
   display: none;
 }
-.hour-card.past-hour .hour-right {
-  grid-template-columns: repeat(4, 1fr);
-}
 .hour-card.past-hour .hour-icon {
   display: none;
+}
+.hour-card.past-hour .hour-left {
+  padding: 0.3rem 0.3rem;
+}
+.hour-card.past-hour .hour-time {
+  font-size: 0.8rem;
+}
+.hour-card.past-hour .hour-right {
+  padding: 0.25rem;
+  gap: 1px;
+}
+.hour-card.past-hour .hour-metric {
+  padding: 0.15rem 0.1rem;
+  background: transparent;
+}
+.hour-card.past-hour .hour-metric-value {
+  font-size: 0.75rem;
+}
+.hour-card.past-hour .hour-metric-label {
+  font-size: 0.45rem;
 }
 .hour-left {
   display: flex;
@@ -546,7 +560,7 @@ footer {
 <header>
   <h1>🌤️ Ely Weather</h1>
   <div class="subtitle">Ely, East Cambridgeshire, Cambridgeshire, Cambridgeshire and Peterborough, England, United Kingdom</div>
-  <div class="updated">Generated 2026-06-09 22:17 BST</div>
+  <div class="updated">Generated 2026-06-09 22:21 BST</div>
 </header>
 <div class="container">
   <div class="forecast-grid">
