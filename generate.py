@@ -1049,20 +1049,24 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
                   <span class="hour-metric-value {feels_color(at)}">{at:.0f}°</span>
                 </div>
                 <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value {wind_color(ws)}">{ws:.0f}</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value {wind_color(hourly.get('wind_gusts_10m',[0]*24)[i])}">{hourly.get('wind_gusts_10m',[0]*24)[i]:.0f}</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value {wind_color(ws)}">{wind_dir(wd)}</span>
+                </div>
+                <div class="hour-metric">
                   <span class="hour-metric-label">Rain</span>
                   <span class="hour-metric-value {rain_color(pp)}">{pp}%</span>
                 </div>
                 <div class="hour-metric">
                   <span class="hour-metric-label">Rain</span>
                   <span class="hour-metric-value {rain_color(pr)}">{pr:.1f}<span class="hour-metric-unit">mm</span></span>
-                </div>
-                <div class="hour-metric">
-                  <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value {wind_color(ws)}">{ws:.0f}</span>
-                </div>
-                <div class="hour-metric">
-                  <span class="hour-metric-label">Dir</span>
-                  <span class="hour-metric-value {wind_color(ws)}">{wind_dir(wd)}</span>
                 </div>
                 <div class="hour-metric">
                   <span class="hour-metric-label">Cloud</span>
@@ -1083,10 +1087,6 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
                 <div class="hour-metric">
                   <span class="hour-metric-label">Press</span>
                   <span class="hour-metric-value {press_color(ps)}">{ps:.0f}</span>
-                </div>
-                <div class="hour-metric">
-                  <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value {wind_color(hourly.get('wind_gusts_10m',[0]*24)[i])}">{hourly.get('wind_gusts_10m',[0]*24)[i]:.0f}</span>
                 </div>
               </div>
             </div>'''
