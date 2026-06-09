@@ -1056,6 +1056,7 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
         cards = ""
         for i in range(min(24, len(times))):
             t = times[i]
+            now_badge = '<span class="hour-now-badge">NOW</span>' if day["is_today"] else ""
             tc = hourly.get("temperature_2m", [None]*24)[i]
             at = hourly.get("apparent_temperature", [None]*24)[i]
             wc = hourly.get("weather_code", [0]*24)[i]
@@ -1073,7 +1074,7 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
 
             cards += f'''<div class="hour-card" data-hour="{t[11:13]}">
               <div class="hour-left">
-                <span class="hour-now-badge">NOW</span>
+                {now_badge}
                 <span class="hour-time">{t[11:13]}:00</span>
                 <span class="hour-icon">{h_icon}</span>
               </div>
