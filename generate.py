@@ -20,8 +20,10 @@ GEOCODE_URL = "https://geocode.maps.co/search"
 WEATHER_URL = "https://api.open-meteo.com/v1/forecast"
 
 WMO = {
-    0: ("Clear sky", "☀️"), 1: ("Mainly clear", "🌤️"),
-    2: ("Partly cloudy", "⛅"), 3: ("Overcast", "☁️"),
+    0: ("Clear sky", "☀️"),
+    1: ("Mainly clear", "🌤️"),
+    2: ("Partly cloudy", "⛅"),
+    3: ("Overcast", "☁️"),
     45: ("Fog", "🌫️"), 48: ("Rime fog", "🌫️"),
     51: ("Light drizzle", "🌦️"), 53: ("Drizzle", "🌦️"),
     55: ("Dense drizzle", "🌧️"),
@@ -29,7 +31,7 @@ WMO = {
     61: ("Light rain", "🌦️"), 63: ("Rain", "🌧️"),
     65: ("Heavy rain", "🌧️"), 66: ("Freezing rain", "🌧️"),
     67: ("Freezing rain", "🌧️"),
-    71: ("Light snow", "🌨️"), 73: ("Snow", "❄️"),
+    71: ("Light snow", "🌨️"), 73: ("Snow", "🌨️"),
     75: ("Heavy snow", "❄️"), 77: ("Snow grains", "❄️"),
     80: ("Light showers", "🌦️"), 81: ("Showers", "🌧️"),
     82: ("Heavy showers", "🌧️"),
@@ -507,6 +509,22 @@ header .updated {
 .hour-card.current-hour .hour-now-badge {
   display: inline-block;
 }
+/* Past hours: washed out, compact (temp, feels, wind, gust only) */
+.hour-card.past-hour {
+  opacity: 0.35;
+  transform: scaleY(0.88);
+  transform-origin: center top;
+  margin-bottom: -4px;
+}
+.hour-card.past-hour .hour-metric-detail {
+  display: none;
+}
+.hour-card.past-hour .hour-right {
+  grid-template-columns: repeat(4, 1fr);
+}
+.hour-card.past-hour .hour-icon {
+  display: none;
+}
 .hour-left {
   display: flex;
   flex-direction: column;
@@ -741,7 +759,13 @@ CURRENT_HOUR_JS = '''<script>
 (function(){
   function highlightNow(){
     var h=String(new Date().getHours()).padStart(2,"0");
+    var hv=parseInt(h,10);
     document.querySelectorAll(".hour-card.current-hour").forEach(function(c){c.classList.remove("current-hour")});
+    document.querySelectorAll(".hour-card.past-hour").forEach(function(c){c.classList.remove("past-hour")});
+    document.querySelectorAll(".hour-card").forEach(function(c){
+      var ch=parseInt(c.getAttribute("data-hour"),10);
+      if(ch<hv)c.classList.add("past-hour");
+    });
     var card=document.querySelector('.hour-card[data-hour="'+h+'"]');
     if(card)card.classList.add("current-hour");
   }
@@ -1078,51 +1102,51 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
                 <span class="hour-icon">{h_icon}</span>
               </div>
               <div class="hour-right">
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-temp">
                   <span class="hour-metric-label">Temp</span>
                   <span class="hour-metric-value {temp_color(tc)}">{tc:.0f}°</span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
                   <span class="hour-metric-value {feels_color(at)}">{at:.0f}°</span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
                   <span class="hour-metric-value {wind_color(ws)}">{ws:.0f}</span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
                   <span class="hour-metric-value {wind_color(hourly.get('wind_gusts_10m',[0]*24)[i])}">{hourly.get('wind_gusts_10m',[0]*24)[i]:.0f}</span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
                   <span class="hour-metric-value {wind_color(ws)}">{wind_dir(wd)}</span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
                   <span class="hour-metric-value {rain_color(pp)}">{pp}%</span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
                   <span class="hour-metric-value {rain_color(pr)}">{pr:.1f}<span class="hour-metric-unit">mm</span></span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Cloud</span>
                   <span class="hour-metric-value {cloud_color(cc)}">{cc}%</span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Humid</span>
                   <span class="hour-metric-value {humid_color(hu)}">{hu}%</span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
                   <span class="hour-metric-value {uv_color(uv)}">{uv:.1f}</span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
                   <span class="hour-metric-value {sun_color(sun)}">{sun/3600:.1f}h</span>
                 </div>
-                <div class="hour-metric">
+                <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Press</span>
                   <span class="hour-metric-value {press_color(ps)}">{ps:.0f}</span>
                 </div>
@@ -1165,7 +1189,7 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
   Data from Open-Meteo · <a href="index.html">7-day forecast</a>
 </footer>
 {LIVE_JS}
-{CURRENT_HOUR_JS}
+{CURRENT_HOUR_JS if day["is_today"] else ""}
 </body>
 </html>'''
 
