@@ -23,17 +23,17 @@ WMO = {
     0: ("Clear sky", "☀️"), 1: ("Mainly clear", "🌤️"),
     2: ("Partly cloudy", "⛅"), 3: ("Overcast", "☁️"),
     45: ("Fog", "🌫️"), 48: ("Rime fog", "🌫️"),
-    51: ("Light drizzle", "🌦️"), 53: ("Drizzle", "🌦️"),
+    51: ("Light drizzle", "🌦️"), 53: ("Moderate drizzle", "🌦️"),
     55: ("Dense drizzle", "🌧️"),
-    56: ("Freezing drizzle", "🌧️"), 57: ("Freezing drizzle", "🌧️"),
-    61: ("Light rain", "🌦️"), 63: ("Rain", "🌧️"),
+    56: ("Freezing drizzle", "🌧️"), 57: ("Dense freezing drizzle", "🌧️"),
+    61: ("Slight rain", "🌦️"), 63: ("Moderate rain", "🌧️"),
     65: ("Heavy rain", "🌧️"), 66: ("Freezing rain", "🌧️"),
-    67: ("Freezing rain", "🌧️"),
-    71: ("Light snow", "🌨️"), 73: ("Snow", "❄️"),
+    67: ("Heavy freezing rain", "🌧️"),
+    71: ("Slight snow", "🌨️"), 73: ("Moderate snow", "❄️"),
     75: ("Heavy snow", "❄️"), 77: ("Snow grains", "❄️"),
-    80: ("Light showers", "🌦️"), 81: ("Showers", "🌧️"),
+    80: ("Slight showers", "🌦️"), 81: ("Moderate showers", "🌧️"),
     82: ("Heavy showers", "🌧️"),
-    85: ("Light snow showers", "🌨️"), 86: ("Heavy snow showers", "❄️"),
+    85: ("Slight snow showers", "🌨️"), 86: ("Heavy snow showers", "❄️"),
     95: ("Thunderstorm", "⛈️"), 96: ("Thunderstorm w/ hail", "⛈️"),
     99: ("Severe thunderstorm", "⛈️"),
 }
@@ -199,11 +199,11 @@ header h1 {
 }
 header .subtitle {
   color: var(--text-dim);
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 header .updated {
   color: var(--text-dim);
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   margin-top: 0.5rem;
   opacity: 0.7;
 }
@@ -258,38 +258,38 @@ header .updated {
   display: inline-block;
   background: var(--accent);
   color: var(--bg);
-  font-size: 0.65rem;
+  font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 0.15rem 0.5rem;
+  padding: 0.2rem 0.6rem;
   border-radius: 4px;
   margin-bottom: 0.75rem;
 }
 
 /* ─── Card content ───────────────────────────────────────── */
 .card-day {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 .card-icon {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+  font-size: 3.5rem;
+  margin-bottom: 0.25rem;
 }
 .card-condition {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   color: var(--text-dim);
   margin-bottom: 0.75rem;
-  line-height: 1.3;
+  line-height: 1.2;
   word-wrap: break-word;
   hyphens: auto;
 }
 .card-temp {
-  font-size: 1.5rem;
+  font-size: 1.7rem;
   font-weight: 700;
   margin-bottom: 0.75rem;
 }
@@ -303,7 +303,7 @@ header .updated {
 .card-stat {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
+  font-size: 1rem;
 }
 .card-stat .label { color: var(--text-dim); }
 .card-stat .value { font-weight: 600; }
@@ -325,7 +325,7 @@ header .updated {
   flex-direction: column;
   gap: 0.3rem;
   margin-top: 0.5rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: var(--text-dim);
 }
 .current-details span { color: var(--text); font-weight: 600; }
@@ -336,7 +336,7 @@ header .updated {
   align-items: center;
   gap: 0.35rem;
   color: var(--text-dim);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   margin-bottom: 1.5rem;
   padding: 0.4rem 0.75rem;
   border-radius: var(--radius-sm);
@@ -354,13 +354,13 @@ header .updated {
   margin-bottom: 2rem;
 }
 .detail-header h2 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
   margin-bottom: 0.25rem;
 }
 .detail-header .condition {
   color: var(--text-dim);
-  font-size: 1rem;
+  font-size: 1.3rem;
 }
 
 /* Current weather block (today only) */
@@ -372,7 +372,7 @@ header .updated {
   margin-bottom: 1.5rem;
 }
 .current-block .section-label {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -388,12 +388,12 @@ header .updated {
   grid-column: 1;
 }
 .current-main .big-temp {
-  font-size: 3.5rem;
+  font-size: 3.75rem;
   font-weight: 800;
   line-height: 1;
 }
 .current-main .big-icon {
-  font-size: 3rem;
+  font-size: 3.25rem;
 }
 .current-meta {
   grid-column: 2;
@@ -405,7 +405,7 @@ header .updated {
 .current-meta-item {
   display: flex;
   justify-content: space-between;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
 }
 .current-meta-item .lbl { color: var(--text-dim); }
 .current-meta-item .val { font-weight: 600; }
@@ -419,7 +419,7 @@ header .updated {
   margin-bottom: 1rem;
 }
 .section-label {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -448,20 +448,20 @@ header .updated {
   padding: 0.75rem;
 }
 .stat-item .stat-label {
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   color: var(--text-dim);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 0.25rem;
 }
 .stat-item .stat-value {
-  font-size: 1.25rem;
+  font-size: 1.6rem;
   font-weight: 700;
 }
 .stat-item .stat-value.temp-warm { color: var(--temp-warm); }
 .stat-item .stat-value.temp-cool { color: var(--temp-cool); }
 .stat-item .stat-unit {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   color: var(--text-dim);
   margin-left: 0.25rem;
 }
@@ -665,11 +665,11 @@ footer {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
-.live-temp { font-size: 3rem; font-weight: 800; line-height: 1; }
-.live-details { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.5rem; font-size: 0.8rem; color: var(--text-dim); }
+.live-temp { font-size: 3.5rem; font-weight: 800; line-height: 1; }
+.live-details { display: flex; flex-direction: column; gap: 0.3rem; margin-top: 0.5rem; font-size: 0.95rem; color: var(--text-dim); }
 .live-details span { color: var(--text); font-weight: 600; }
-.live-big-temp { font-size: 3.5rem; font-weight: 800; line-height: 1; }
-.live-meta-item { display: flex; justify-content: space-between; font-size: 0.9rem; }
+.live-big-temp { font-size: 4rem; font-weight: 800; line-height: 1; }
+.live-meta-item { display: flex; justify-content: space-between; font-size: 1.05rem; }
 .live-meta-item .lbl { color: var(--text-dim); }
 .live-meta-item .val { font-weight: 600; }
 """
@@ -1165,7 +1165,7 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
   Data from Open-Meteo · <a href="index.html">7-day forecast</a>
 </footer>
 {LIVE_JS}
-{CURRENT_HOUR_JS}
+{CURRENT_HOUR_JS if day["is_today"] else ""}
 </body>
 </html>'''
 
