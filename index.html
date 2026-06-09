@@ -318,41 +318,106 @@ header .updated {
   margin-left: 0.25rem;
 }
 
-/* Hourly table */
+/* ─── Hourly cards ──────────────────────────────────────── */
 .hourly-section {
   margin-top: 1.5rem;
 }
-.hourly-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius-sm);
+.hourly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
-.hourly-table {
-  width: 100%;
-  min-width: 700px;
-  border-collapse: collapse;
-  font-size: 0.8rem;
-}
-.hourly-table th {
-  text-align: left;
-  padding: 0.6rem 0.5rem;
-  color: var(--text-dim);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
+.hour-card {
+  display: grid;
+  grid-template-columns: 52px 1fr;
   background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
 }
-.hourly-table td {
+.hour-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.4rem;
+  border-right: 1px solid var(--border);
+  gap: 0.2rem;
+}
+.hour-time {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+.hour-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.hour-right {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
   padding: 0.5rem;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  text-align: center;
 }
-.hourly-table tr:last-child td { border-bottom: none; }
-.hourly-table .time-col { color: var(--text-dim); font-weight: 600; }
-.hourly-table .icon-col { font-size: 1.25rem; }
+.hour-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.3rem 0.2rem;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.02);
+}
+.hour-metric-label {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 0.15rem;
+}
+.hour-metric-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.hour-metric-unit {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+/* Color classes for metric values */
+.val-warm     { color: #fb923c; }
+.val-hot      { color: #ef4444; }
+.val-cool     { color: #38bdf8; }
+.val-cold     { color: #818cf8; }
+.val-dry      { color: #4ade80; }
+.val-drizzle  { color: #38bdf8; }
+.val-rainy    { color: #2563eb; }
+.val-wet      { color: #7c3aed; }
+.val-calm     { color: #4ade80; }
+.val-breezy   { color: #fbbf24; }
+.val-windy    { color: #f97316; }
+.val-stormy   { color: #ef4444; }
+.val-clear    { color: #fbbf24; }
+.val-cloudy   { color: #94a3b8; }
+.val-overcast { color: #64748b; }
+.val-humid-low    { color: #4ade80; }
+.val-humid-mid    { color: #fbbf24; }
+.val-humid-high   { color: #38bdf8; }
+.val-humid-soak   { color: #7c3aed; }
+.val-uv-low  { color: #4ade80; }
+.val-uv-mod  { color: #fbbf24; }
+.val-uv-high { color: #f97316; }
+.val-uv-ext  { color: #ef4444; }
+.val-press-high { color: #4ade80; }
+.val-press-mid  { color: #fbbf24; }
+.val-press-low  { color: #ef4444; }
+.val-sun-high { color: #fbbf24; }
+.val-sun-mid  { color: #f59e0b; }
+.val-sun-low  { color: #94a3b8; }
+.val-feels-warm { color: #fb923c; }
+.val-feels-hot  { color: #ef4444; }
+.val-feels-cool { color: #38bdf8; }
+.val-feels-cold { color: #818cf8; }
 
 /* Bar charts */
 .bar-container {
@@ -441,7 +506,7 @@ footer {
 <header>
   <h1>🌤️ Ely Weather</h1>
   <div class="subtitle">Ely, East Cambridgeshire, Cambridgeshire, Cambridgeshire and Peterborough, England, United Kingdom</div>
-  <div class="updated">Generated 2026-06-09 15:04 BST</div>
+  <div class="updated">Generated 2026-06-09 15:05 BST</div>
 </header>
 <div class="container">
   <div class="forecast-grid">

@@ -466,41 +466,106 @@ header .updated {
   margin-left: 0.25rem;
 }
 
-/* Hourly table */
+/* ─── Hourly cards ──────────────────────────────────────── */
 .hourly-section {
   margin-top: 1.5rem;
 }
-.hourly-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius-sm);
+.hourly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
-.hourly-table {
-  width: 100%;
-  min-width: 700px;
-  border-collapse: collapse;
-  font-size: 0.8rem;
-}
-.hourly-table th {
-  text-align: left;
-  padding: 0.6rem 0.5rem;
-  color: var(--text-dim);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
+.hour-card {
+  display: grid;
+  grid-template-columns: 52px 1fr;
   background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
 }
-.hourly-table td {
+.hour-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.4rem;
+  border-right: 1px solid var(--border);
+  gap: 0.2rem;
+}
+.hour-time {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+.hour-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.hour-right {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
   padding: 0.5rem;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  text-align: center;
 }
-.hourly-table tr:last-child td { border-bottom: none; }
-.hourly-table .time-col { color: var(--text-dim); font-weight: 600; }
-.hourly-table .icon-col { font-size: 1.25rem; }
+.hour-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.3rem 0.2rem;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.02);
+}
+.hour-metric-label {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 0.15rem;
+}
+.hour-metric-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.hour-metric-unit {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+/* Color classes for metric values */
+.val-warm     { color: #fb923c; }
+.val-hot      { color: #ef4444; }
+.val-cool     { color: #38bdf8; }
+.val-cold     { color: #818cf8; }
+.val-dry      { color: #4ade80; }
+.val-drizzle  { color: #38bdf8; }
+.val-rainy    { color: #2563eb; }
+.val-wet      { color: #7c3aed; }
+.val-calm     { color: #4ade80; }
+.val-breezy   { color: #fbbf24; }
+.val-windy    { color: #f97316; }
+.val-stormy   { color: #ef4444; }
+.val-clear    { color: #fbbf24; }
+.val-cloudy   { color: #94a3b8; }
+.val-overcast { color: #64748b; }
+.val-humid-low    { color: #4ade80; }
+.val-humid-mid    { color: #fbbf24; }
+.val-humid-high   { color: #38bdf8; }
+.val-humid-soak   { color: #7c3aed; }
+.val-uv-low  { color: #4ade80; }
+.val-uv-mod  { color: #fbbf24; }
+.val-uv-high { color: #f97316; }
+.val-uv-ext  { color: #ef4444; }
+.val-press-high { color: #4ade80; }
+.val-press-mid  { color: #fbbf24; }
+.val-press-low  { color: #ef4444; }
+.val-sun-high { color: #fbbf24; }
+.val-sun-mid  { color: #f59e0b; }
+.val-sun-low  { color: #94a3b8; }
+.val-feels-warm { color: #fb923c; }
+.val-feels-hot  { color: #ef4444; }
+.val-feels-cool { color: #38bdf8; }
+.val-feels-cold { color: #818cf8; }
 
 /* Bar charts */
 .bar-container {
@@ -887,50 +952,149 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
   </div>
 </div>'''
 
-    # ─── Hourly table ───────────────────────────────────────
+    # ─── Hourly cards ───────────────────────────────────────
+    def temp_color(val):
+        if val is None: return ""
+        if val >= 20: return "val-hot"
+        if val >= 15: return "val-warm"
+        if val >= 10: return "val-cool"
+        return "val-cold"
+
+    def feels_color(val):
+        if val is None: return ""
+        if val >= 20: return "val-feels-hot"
+        if val >= 15: return "val-feels-warm"
+        if val >= 10: return "val-feels-cool"
+        return "val-feels-cold"
+
+    def rain_color(val):
+        if val is None: return ""
+        if val == 0: return "val-dry"
+        if val < 2: return "val-drizzle"
+        if val < 10: return "val-rainy"
+        return "val-wet"
+
+    def wind_color(val):
+        if val is None: return ""
+        if val < 15: return "val-calm"
+        if val < 30: return "val-breezy"
+        if val < 50: return "val-windy"
+        return "val-stormy"
+
+    def cloud_color(val):
+        if val is None: return ""
+        if val < 30: return "val-clear"
+        if val < 70: return "val-cloudy"
+        return "val-overcast"
+
+    def humid_color(val):
+        if val is None: return ""
+        if val < 40: return "val-humid-low"
+        if val < 60: return "val-humid-mid"
+        if val < 80: return "val-humid-high"
+        return "val-humid-soak"
+
+    def uv_color(val):
+        if val is None: return ""
+        if val < 3: return "val-uv-low"
+        if val < 6: return "val-uv-mod"
+        if val < 8: return "val-uv-high"
+        return "val-uv-ext"
+
+    def press_color(val):
+        if val is None: return ""
+        if val >= 1015: return "val-press-high"
+        if val >= 1005: return "val-press-mid"
+        return "val-press-low"
+
+    def sun_color(val):
+        if val is None: return ""
+        dur = val / 3600 if val else 0
+        if dur >= 0.5: return "val-sun-high"
+        if dur >= 0.1: return "val-sun-mid"
+        return "val-sun-low"
+
     hourly_html = ""
     if times:
-        rows = ""
+        cards = ""
         for i in range(min(24, len(times))):
             t = times[i]
-            hour = int(t[11:13])
-            tc = hourly.get("temperature_2m", [None]*24)[i] if "temperature_2m" in hourly else None
-            at = hourly.get("apparent_temperature", [None]*24)[i] if "apparent_temperature" in hourly else None
-            wc = hourly.get("weather_code", [0]*24)[i] if "weather_code" in hourly else 0
-            pr = hourly.get("precipitation", [0]*24)[i] if "precipitation" in hourly else 0
-            pp = hourly.get("precipitation_probability", [0]*24)[i] if "precipitation_probability" in hourly else 0
-            ws = hourly.get("wind_speed_10m", [0]*24)[i] if "wind_speed_10m" in hourly else 0
-            wd = hourly.get("wind_direction_10m", [0]*24)[i] if "wind_direction_10m" in hourly else 0
-            cc = hourly.get("cloud_cover", [0]*24)[i] if "cloud_cover" in hourly else 0
-            sun = hourly.get("sunshine_duration", [0]*24)[i] if "sunshine_duration" in hourly else 0
-            uv = hourly.get("uv_index", [0]*24)[i] if "uv_index" in hourly else 0
-            hu = hourly.get("relative_humidity_2m", [0]*24)[i] if "relative_humidity_2m" in hourly else 0
+            tc = hourly.get("temperature_2m", [None]*24)[i]
+            at = hourly.get("apparent_temperature", [None]*24)[i]
+            wc = hourly.get("weather_code", [0]*24)[i]
+            pr = hourly.get("precipitation", [0]*24)[i]
+            pp = hourly.get("precipitation_probability", [0]*24)[i]
+            ws = hourly.get("wind_speed_10m", [0]*24)[i]
+            wd = hourly.get("wind_direction_10m", [0]*24)[i]
+            cc = hourly.get("cloud_cover", [0]*24)[i]
+            sun = hourly.get("sunshine_duration", [0]*24)[i]
+            uv = hourly.get("uv_index", [0]*24)[i]
+            hu = hourly.get("relative_humidity_2m", [0]*24)[i]
+            ps = hourly.get("pressure_msl", [0]*24)[i]
 
             h_icon, h_desc = wmo_info(wc)
-            rows += f'''<tr>
-              <td class="time-col">{t[11:13]}:00</td>
-              <td class="icon-col">{h_icon}</td>
-              <td>{tc:.0f}°</td>
-              <td>{pp}%</td>
-              <td>{pr:.1f}</td>
-              <td>{ws:.0f}</td>
-              <td>{wind_dir(wd)}</td>
-              <td>{cc}%</td>
-            </tr>'''
+
+            cards += f'''<div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">{t[11:13]}:00</span>
+                <span class="hour-icon">{h_icon}</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value {temp_color(tc)}">{tc:.0f}°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value {feels_color(at)}">{at:.0f}°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value {rain_color(pp)}">{pp}%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value {rain_color(pr)}">{pr:.1f}<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value {wind_color(ws)}">{ws:.0f}</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value {wind_color(ws)}">{wind_dir(wd)}</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value {cloud_color(cc)}">{cc}%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value {humid_color(hu)}">{hu}%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value {uv_color(uv)}">{uv:.1f}</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value {sun_color(sun)}">{sun/3600:.1f}h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value {press_color(ps)}">{ps:.0f}</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value {wind_color(hourly.get('wind_gusts_10m',[0]*24)[i])}">{hourly.get('wind_gusts_10m',[0]*24)[i]:.0f}</span>
+                </div>
+              </div>
+            </div>'''
 
         hourly_html = f'''
 <div class="section hourly-section">
   <div class="section-label">Hourly Forecast</div>
-  <div class="hourly-scroll">
-    <table class="hourly-table">
-      <thead>
-        <tr>
-          <th>Time</th><th></th><th>Temp</th><th>Rain %</th><th>Rain</th><th>Wind</th><th>Dir</th><th>Cloud</th>
-        </tr>
-      </thead>
-      <tbody>{rows}</tbody>
-    </table>
-  </div>
+  <div class="hourly-list">{cards}</div>
 </div>'''
 
     return f'''<!DOCTYPE html>

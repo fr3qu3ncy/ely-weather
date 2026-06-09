@@ -318,41 +318,106 @@ header .updated {
   margin-left: 0.25rem;
 }
 
-/* Hourly table */
+/* ─── Hourly cards ──────────────────────────────────────── */
 .hourly-section {
   margin-top: 1.5rem;
 }
-.hourly-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  border-radius: var(--radius-sm);
+.hourly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
-.hourly-table {
-  width: 100%;
-  min-width: 700px;
-  border-collapse: collapse;
-  font-size: 0.8rem;
-}
-.hourly-table th {
-  text-align: left;
-  padding: 0.6rem 0.5rem;
-  color: var(--text-dim);
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
+.hour-card {
+  display: grid;
+  grid-template-columns: 52px 1fr;
   background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
 }
-.hourly-table td {
+.hour-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 0.4rem;
+  border-right: 1px solid var(--border);
+  gap: 0.2rem;
+}
+.hour-time {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-dim);
+}
+.hour-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+.hour-right {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
   padding: 0.5rem;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
-  text-align: center;
 }
-.hourly-table tr:last-child td { border-bottom: none; }
-.hourly-table .time-col { color: var(--text-dim); font-weight: 600; }
-.hourly-table .icon-col { font-size: 1.25rem; }
+.hour-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.3rem 0.2rem;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.02);
+}
+.hour-metric-label {
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  margin-bottom: 0.15rem;
+}
+.hour-metric-value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.hour-metric-unit {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+/* Color classes for metric values */
+.val-warm     { color: #fb923c; }
+.val-hot      { color: #ef4444; }
+.val-cool     { color: #38bdf8; }
+.val-cold     { color: #818cf8; }
+.val-dry      { color: #4ade80; }
+.val-drizzle  { color: #38bdf8; }
+.val-rainy    { color: #2563eb; }
+.val-wet      { color: #7c3aed; }
+.val-calm     { color: #4ade80; }
+.val-breezy   { color: #fbbf24; }
+.val-windy    { color: #f97316; }
+.val-stormy   { color: #ef4444; }
+.val-clear    { color: #fbbf24; }
+.val-cloudy   { color: #94a3b8; }
+.val-overcast { color: #64748b; }
+.val-humid-low    { color: #4ade80; }
+.val-humid-mid    { color: #fbbf24; }
+.val-humid-high   { color: #38bdf8; }
+.val-humid-soak   { color: #7c3aed; }
+.val-uv-low  { color: #4ade80; }
+.val-uv-mod  { color: #fbbf24; }
+.val-uv-high { color: #f97316; }
+.val-uv-ext  { color: #ef4444; }
+.val-press-high { color: #4ade80; }
+.val-press-mid  { color: #fbbf24; }
+.val-press-low  { color: #ef4444; }
+.val-sun-high { color: #fbbf24; }
+.val-sun-mid  { color: #f59e0b; }
+.val-sun-low  { color: #94a3b8; }
+.val-feels-warm { color: #fb923c; }
+.val-feels-hot  { color: #ef4444; }
+.val-feels-cool { color: #38bdf8; }
+.val-feels-cold { color: #818cf8; }
 
 /* Bar charts */
 .bar-container {
@@ -556,232 +621,1327 @@ footer {
   
 <div class="section hourly-section">
   <div class="section-label">Hourly Forecast</div>
-  <div class="hourly-scroll">
-    <table class="hourly-table">
-      <thead>
-        <tr>
-          <th>Time</th><th></th><th>Temp</th><th>Rain %</th><th>Rain</th><th>Wind</th><th>Dir</th><th>Cloud</th>
-        </tr>
-      </thead>
-      <tbody><tr>
-              <td class="time-col">00:00</td>
-              <td class="icon-col">🌤️</td>
-              <td>13°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>11</td>
-              <td>NW</td>
-              <td>23%</td>
-            </tr><tr>
-              <td class="time-col">01:00</td>
-              <td class="icon-col">🌤️</td>
-              <td>12°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>10</td>
-              <td>NW</td>
-              <td>27%</td>
-            </tr><tr>
-              <td class="time-col">02:00</td>
-              <td class="icon-col">🌤️</td>
-              <td>11°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>9</td>
-              <td>NW</td>
-              <td>38%</td>
-            </tr><tr>
-              <td class="time-col">03:00</td>
-              <td class="icon-col">⛅</td>
-              <td>10°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>8</td>
-              <td>NW</td>
-              <td>54%</td>
-            </tr><tr>
-              <td class="time-col">04:00</td>
-              <td class="icon-col">⛅</td>
-              <td>10°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>8</td>
-              <td>NW</td>
-              <td>67%</td>
-            </tr><tr>
-              <td class="time-col">05:00</td>
-              <td class="icon-col">⛅</td>
-              <td>10°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>6</td>
-              <td>NW</td>
-              <td>75%</td>
-            </tr><tr>
-              <td class="time-col">06:00</td>
-              <td class="icon-col">⛅</td>
-              <td>11°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>5</td>
-              <td>NNW</td>
-              <td>79%</td>
-            </tr><tr>
-              <td class="time-col">07:00</td>
-              <td class="icon-col">☁️</td>
-              <td>12°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>5</td>
-              <td>NNW</td>
-              <td>81%</td>
-            </tr><tr>
-              <td class="time-col">08:00</td>
-              <td class="icon-col">⛅</td>
-              <td>13°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>4</td>
-              <td>N</td>
-              <td>77%</td>
-            </tr><tr>
-              <td class="time-col">09:00</td>
-              <td class="icon-col">⛅</td>
-              <td>15°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>5</td>
-              <td>N</td>
-              <td>71%</td>
-            </tr><tr>
-              <td class="time-col">10:00</td>
-              <td class="icon-col">⛅</td>
-              <td>16°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>5</td>
-              <td>NNE</td>
-              <td>66%</td>
-            </tr><tr>
-              <td class="time-col">11:00</td>
-              <td class="icon-col">⛅</td>
-              <td>17°</td>
-              <td>1%</td>
-              <td>0.0</td>
-              <td>6</td>
-              <td>NNE</td>
-              <td>67%</td>
-            </tr><tr>
-              <td class="time-col">12:00</td>
-              <td class="icon-col">⛅</td>
-              <td>18°</td>
-              <td>3%</td>
-              <td>0.0</td>
-              <td>7</td>
-              <td>NNE</td>
-              <td>70%</td>
-            </tr><tr>
-              <td class="time-col">13:00</td>
-              <td class="icon-col">⛅</td>
-              <td>19°</td>
-              <td>4%</td>
-              <td>0.0</td>
-              <td>8</td>
-              <td>NNE</td>
-              <td>70%</td>
-            </tr><tr>
-              <td class="time-col">14:00</td>
-              <td class="icon-col">⛅</td>
-              <td>19°</td>
-              <td>5%</td>
-              <td>0.0</td>
-              <td>8</td>
-              <td>NNE</td>
-              <td>63%</td>
-            </tr><tr>
-              <td class="time-col">15:00</td>
-              <td class="icon-col">⛅</td>
-              <td>20°</td>
-              <td>6%</td>
-              <td>0.0</td>
-              <td>8</td>
-              <td>NNE</td>
-              <td>54%</td>
-            </tr><tr>
-              <td class="time-col">16:00</td>
-              <td class="icon-col">🌤️</td>
-              <td>20°</td>
-              <td>6%</td>
-              <td>0.0</td>
-              <td>8</td>
-              <td>NNE</td>
-              <td>47%</td>
-            </tr><tr>
-              <td class="time-col">17:00</td>
-              <td class="icon-col">🌤️</td>
-              <td>20°</td>
-              <td>5%</td>
-              <td>0.0</td>
-              <td>9</td>
-              <td>NE</td>
-              <td>45%</td>
-            </tr><tr>
-              <td class="time-col">18:00</td>
-              <td class="icon-col">🌤️</td>
-              <td>20°</td>
-              <td>3%</td>
-              <td>0.0</td>
-              <td>9</td>
-              <td>NE</td>
-              <td>46%</td>
-            </tr><tr>
-              <td class="time-col">19:00</td>
-              <td class="icon-col">🌤️</td>
-              <td>19°</td>
-              <td>2%</td>
-              <td>0.0</td>
-              <td>9</td>
-              <td>ENE</td>
-              <td>47%</td>
-            </tr><tr>
-              <td class="time-col">20:00</td>
-              <td class="icon-col">🌤️</td>
-              <td>18°</td>
-              <td>1%</td>
-              <td>0.0</td>
-              <td>11</td>
-              <td>E</td>
-              <td>48%</td>
-            </tr><tr>
-              <td class="time-col">21:00</td>
-              <td class="icon-col">🌤️</td>
-              <td>16°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>13</td>
-              <td>ESE</td>
-              <td>49%</td>
-            </tr><tr>
-              <td class="time-col">22:00</td>
-              <td class="icon-col">⛅</td>
-              <td>15°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>14</td>
-              <td>SE</td>
-              <td>50%</td>
-            </tr><tr>
-              <td class="time-col">23:00</td>
-              <td class="icon-col">🌤️</td>
-              <td>14°</td>
-              <td>0%</td>
-              <td>0.0</td>
-              <td>13</td>
-              <td>SE</td>
-              <td>48%</td>
-            </tr></tbody>
-    </table>
-  </div>
+  <div class="hourly-list"><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">00:00</span>
+                <span class="hour-icon">🌤️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">13°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cool">11°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">11</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NW</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-clear">23%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-high">73%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.0</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">19</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">01:00</span>
+                <span class="hour-icon">🌤️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">12°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cool">10°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">10</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NW</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-clear">27%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-high">77%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.0</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">17</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">02:00</span>
+                <span class="hour-icon">🌤️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">11°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cold">9°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">9</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NW</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">38%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-soak">81%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.0</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">16</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">03:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">10°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cold">8°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">8</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NW</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">54%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-soak">86%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.0</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-calm">14</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">04:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cold">10°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cold">8°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">8</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NW</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">67%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-soak">88%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.0</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-calm">12</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">05:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">10°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cold">9°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">6</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NW</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-overcast">75%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-soak">87%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.0</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-calm">11</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">06:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">11°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cold">10°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">5</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NNW</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-overcast">79%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-soak">85%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.2</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-calm">10</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">07:00</span>
+                <span class="hour-icon">☁️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">12°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cool">11°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">5</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NNW</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-overcast">81%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-soak">81%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.9</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-calm">10</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">08:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">13°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cool">12°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">4</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">N</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-overcast">77%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-high">76%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">1.6</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-calm">11</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">09:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">15°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cool">14°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">5</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">N</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-overcast">71%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-high">70%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">2.7</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-calm">13</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">10:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-warm">16°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cool">15°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">5</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NNE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">66%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-high">65%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-mod">3.9</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-calm">14</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">11:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-warm">17°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-warm">16°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-drizzle">1%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">6</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NNE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">67%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-high">60%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-mod">5.0</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">16</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">12:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-warm">18°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-warm">17°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-rainy">3%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">7</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NNE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-overcast">70%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-mid">56%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-high">6.0</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">19</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">13:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-warm">19°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-warm">17°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-rainy">4%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">8</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NNE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-overcast">70%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-mid">53%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-high">6.7</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1025</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">20</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">14:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-warm">19°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-warm">18°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-rainy">5%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">8</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NNE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">63%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-mid">51%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-high">6.8</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1024</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">21</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">15:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-warm">20°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-warm">18°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-rainy">6%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">8</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NNE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">54%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-mid">50%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-high">6.5</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1024</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">21</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">16:00</span>
+                <span class="hour-icon">🌤️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-hot">20°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-warm">18°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-rainy">6%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">8</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NNE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">47%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-mid">49%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-mod">5.8</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">1.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1024</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">21</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">17:00</span>
+                <span class="hour-icon">🌤️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-hot">20°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-warm">19°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-rainy">5%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">9</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">45%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-mid">49%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-mod">4.8</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-high">0.5h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1023</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">20</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">18:00</span>
+                <span class="hour-icon">🌤️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-warm">20°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-warm">18°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-rainy">3%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">9</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">NE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">46%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-mid">49%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-mod">3.5</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.1h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1023</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">18</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">19:00</span>
+                <span class="hour-icon">🌤️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-warm">19°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-warm">18°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-rainy">2%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">9</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">ENE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">47%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-mid">52%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">2.4</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1022</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">18</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">20:00</span>
+                <span class="hour-icon">🌤️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-warm">18°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-warm">16°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-drizzle">1%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">11</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">E</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">48%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-mid">59%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">1.2</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1022</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">20</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">21:00</span>
+                <span class="hour-icon">🌤️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-warm">16°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cool">14°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">13</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">ESE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">49%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-high">68%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.4</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1022</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">23</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">22:00</span>
+                <span class="hour-icon">⛅</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">15°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cool">13°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">14</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">SE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">50%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-high">76%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.0</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1022</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">24</span>
+                </div>
+              </div>
+            </div><div class="hour-card">
+              <div class="hour-left">
+                <span class="hour-time">23:00</span>
+                <span class="hour-icon">🌤️</span>
+              </div>
+              <div class="hour-right">
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Temp</span>
+                  <span class="hour-metric-value val-cool">14°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Feels</span>
+                  <span class="hour-metric-value val-feels-cool">13°</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Rain</span>
+                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Wind</span>
+                  <span class="hour-metric-value val-calm">13</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Dir</span>
+                  <span class="hour-metric-value val-calm">SE</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Cloud</span>
+                  <span class="hour-metric-value val-cloudy">48%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Humid</span>
+                  <span class="hour-metric-value val-humid-high">75%</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">UV</span>
+                  <span class="hour-metric-value val-uv-low">0.0</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Sun</span>
+                  <span class="hour-metric-value val-sun-low">0.0h</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Press</span>
+                  <span class="hour-metric-value val-press-high">1022</span>
+                </div>
+                <div class="hour-metric">
+                  <span class="hour-metric-label">Gust</span>
+                  <span class="hour-metric-value val-breezy">22</span>
+                </div>
+              </div>
+            </div></div>
 </div>
 </div>
 <footer>
