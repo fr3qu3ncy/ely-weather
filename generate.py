@@ -421,7 +421,7 @@ header .updated {
   margin-bottom: 1rem;
 }
 .section-label {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
@@ -523,21 +523,21 @@ header .updated {
   padding: 0.3rem 0.3rem;
 }
 .hour-card.past-hour .hour-time {
-  font-size: 0.8rem;
+  font-size: 0.95rem;
 }
 .hour-card.past-hour .hour-right {
-  padding: 0.25rem;
-  gap: 1px;
+  padding: 0.3rem;
+  gap: 2px;
 }
 .hour-card.past-hour .hour-metric {
-  padding: 0.15rem 0.1rem;
+  padding: 0.2rem 0.15rem;
   background: transparent;
 }
 .hour-card.past-hour .hour-metric-value {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
 }
 .hour-card.past-hour .hour-metric-label {
-  font-size: 0.45rem;
+  font-size: 0.55rem;
 }
 .hour-left {
   display: flex;
