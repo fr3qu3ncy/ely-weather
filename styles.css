@@ -500,6 +500,43 @@ header .updated {
   text-align: right;
 }
 
+/* ─── Day separator (multi-day hourly page) ──────────────── */
+.day-separator {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0 0.75rem;
+  padding: 0.5rem 0;
+}
+.day-separator::before,
+.day-separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.day-separator .day-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.day-separator .day-date {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* ─── Hourly card: link variant on index ─────────────────── */
+.card.hourly-link {
+  border-color: var(--sun);
+  background: linear-gradient(135deg, var(--surface) 0%, #1e2235 100%);
+}
+.card.hourly-link::before { opacity: 1; background: var(--sun); }
+
 /* ─── Footer ─────────────────────────────────────────────── */
 footer {
   text-align: center;

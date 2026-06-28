@@ -506,6 +506,43 @@ header .updated {
   text-align: right;
 }
 
+/* ─── Day separator (multi-day hourly page) ──────────────── */
+.day-separator {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0 0.75rem;
+  padding: 0.5rem 0;
+}
+.day-separator::before,
+.day-separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.day-separator .day-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.day-separator .day-date {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* ─── Hourly card: link variant on index ─────────────────── */
+.card.hourly-link {
+  border-color: var(--sun);
+  background: linear-gradient(135deg, var(--surface) 0%, #1e2235 100%);
+}
+.card.hourly-link::before { opacity: 1; background: var(--sun); }
+
 /* ─── Footer ─────────────────────────────────────────────── */
 footer {
   text-align: center;
@@ -612,10 +649,10 @@ footer {
     </div>
     <div class="stat-item">
       <div class="stat-label">UV Index</div>
-      <div class="stat-value">6.6</div>
+      <div class="stat-value">6.8</div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill uv" style="width:60.0%"></div></div>
-      <span class="bar-value">6.6</span>
+      <div class="bar"><div class="bar-fill uv" style="width:61.81818181818181%"></div></div>
+      <span class="bar-value">6.8</span>
     </div>
     </div>
     <div class="stat-item">
@@ -636,7 +673,7 @@ footer {
       <div class="stat-label">Total Rain</div>
       <div class="stat-value">0.3<span class="stat-unit">mm</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill rain" style="width:1.5%"></div></div>
+      <div class="bar"><div class="bar-fill rain" style="width:1.6500000000000001%"></div></div>
       <span class="bar-value">0.3mm</span>
     </div>
     </div>
@@ -656,17 +693,17 @@ footer {
   <div class="stat-grid">
     <div class="stat-item">
       <div class="stat-label">Max Speed</div>
-      <div class="stat-value">14<span class="stat-unit">km/h</span></div>
+      <div class="stat-value">15<span class="stat-unit">km/h</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill wind" style="width:24.000000000000004%"></div></div>
-      <span class="bar-value">14</span>
+      <div class="bar"><div class="bar-fill wind" style="width:25.166666666666664%"></div></div>
+      <span class="bar-value">15</span>
     </div>
     </div>
     <div class="stat-item">
       <div class="stat-label">Max Gusts</div>
       <div class="stat-value">27<span class="stat-unit">km/h</span></div>
       <div class="bar-container">
-      <div class="bar"><div class="bar-fill wind" style="width:34.25%"></div></div>
+      <div class="bar"><div class="bar-fill wind" style="width:33.75%"></div></div>
       <span class="bar-value">27</span>
     </div>
     </div>
@@ -684,7 +721,7 @@ footer {
               <div class="hour-right">
                 <div class="hour-metric hour-metric-temp">
                   <span class="hour-metric-label">Temp</span>
-                  <span class="hour-metric-value val-warm">19°</span>
+                  <span class="hour-metric-value val-warm">18°</span>
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
@@ -692,15 +729,15 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">7</span>
+                  <span class="hour-metric-value val-calm">4</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-calm">11</span>
+                  <span class="hour-metric-value val-calm">8</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
-                  <span class="hour-metric-value val-calm">SSW</span>
+                  <span class="hour-metric-value val-calm">S</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
@@ -716,7 +753,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Humid</span>
-                  <span class="hour-metric-value val-humid-mid">57%</span>
+                  <span class="hour-metric-value val-humid-mid">58%</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
@@ -752,7 +789,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-calm">12</span>
+                  <span class="hour-metric-value val-calm">13</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -772,7 +809,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Humid</span>
-                  <span class="hour-metric-value val-humid-high">61%</span>
+                  <span class="hour-metric-value val-humid-mid">56%</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
@@ -796,23 +833,23 @@ footer {
               <div class="hour-right">
                 <div class="hour-metric hour-metric-temp">
                   <span class="hour-metric-label">Temp</span>
-                  <span class="hour-metric-value val-warm">17°</span>
+                  <span class="hour-metric-value val-warm">18°</span>
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-warm">17°</span>
+                  <span class="hour-metric-value val-feels-warm">16°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">7</span>
+                  <span class="hour-metric-value val-calm">8</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-calm">11</span>
+                  <span class="hour-metric-value val-calm">14</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
-                  <span class="hour-metric-value val-calm">SSW</span>
+                  <span class="hour-metric-value val-calm">SW</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
@@ -828,7 +865,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Humid</span>
-                  <span class="hour-metric-value val-humid-high">64%</span>
+                  <span class="hour-metric-value val-humid-mid">59%</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
@@ -860,7 +897,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">7</span>
+                  <span class="hour-metric-value val-calm">6</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
@@ -868,7 +905,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
-                  <span class="hour-metric-value val-calm">SW</span>
+                  <span class="hour-metric-value val-calm">WSW</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
@@ -884,7 +921,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Humid</span>
-                  <span class="hour-metric-value val-humid-high">64%</span>
+                  <span class="hour-metric-value val-humid-high">62%</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
@@ -903,7 +940,7 @@ footer {
               <div class="hour-left">
                 <span class="hour-now-badge">NOW</span>
                 <span class="hour-time">04:00</span>
-                <span class="hour-icon">☁️</span>
+                <span class="hour-icon">🌦️</span>
               </div>
               <div class="hour-right">
                 <div class="hour-metric hour-metric-temp">
@@ -916,7 +953,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">8</span>
+                  <span class="hour-metric-value val-calm">6</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
@@ -932,7 +969,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
-                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                  <span class="hour-metric-value val-drizzle">0.1<span class="hour-metric-unit">mm</span></span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Cloud</span>
@@ -940,7 +977,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Humid</span>
-                  <span class="hour-metric-value val-humid-high">64%</span>
+                  <span class="hour-metric-value val-humid-high">67%</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
@@ -964,7 +1001,7 @@ footer {
               <div class="hour-right">
                 <div class="hour-metric hour-metric-temp">
                   <span class="hour-metric-label">Temp</span>
-                  <span class="hour-metric-value val-warm">17°</span>
+                  <span class="hour-metric-value val-warm">16°</span>
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
@@ -972,15 +1009,15 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">10</span>
+                  <span class="hour-metric-value val-calm">6</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">17</span>
+                  <span class="hour-metric-value val-calm">11</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
-                  <span class="hour-metric-value val-calm">S</span>
+                  <span class="hour-metric-value val-calm">SSW</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
@@ -996,7 +1033,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Humid</span>
-                  <span class="hour-metric-value val-humid-high">66%</span>
+                  <span class="hour-metric-value val-humid-high">68%</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
@@ -1024,19 +1061,19 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-warm">15°</span>
+                  <span class="hour-metric-value val-feels-warm">16°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">13</span>
+                  <span class="hour-metric-value val-calm">7</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">22</span>
+                  <span class="hour-metric-value val-calm">12</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
-                  <span class="hour-metric-value val-calm">SE</span>
+                  <span class="hour-metric-value val-calm">S</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
@@ -1056,7 +1093,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-low">0.2</span>
+                  <span class="hour-metric-value val-uv-low">0.0</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1071,7 +1108,7 @@ footer {
               <div class="hour-left">
                 <span class="hour-now-badge">NOW</span>
                 <span class="hour-time">07:00</span>
-                <span class="hour-icon">☁️</span>
+                <span class="hour-icon">🌦️</span>
               </div>
               <div class="hour-right">
                 <div class="hour-metric hour-metric-temp">
@@ -1080,19 +1117,19 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-cool">15°</span>
+                  <span class="hour-metric-value val-feels-warm">16°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">14</span>
+                  <span class="hour-metric-value val-calm">5</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">25</span>
+                  <span class="hour-metric-value val-calm">9</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
-                  <span class="hour-metric-value val-calm">ENE</span>
+                  <span class="hour-metric-value val-calm">ESE</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
@@ -1100,7 +1137,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
-                  <span class="hour-metric-value val-dry">0.0<span class="hour-metric-unit">mm</span></span>
+                  <span class="hour-metric-value val-drizzle">0.1<span class="hour-metric-unit">mm</span></span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Cloud</span>
@@ -1112,7 +1149,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-low">0.7</span>
+                  <span class="hour-metric-value val-uv-low">0.1</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1136,15 +1173,15 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-warm">17°</span>
+                  <span class="hour-metric-value val-feels-warm">18°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">12</span>
+                  <span class="hour-metric-value val-calm">5</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">23</span>
+                  <span class="hour-metric-value val-calm">12</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1168,7 +1205,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-low">1.1</span>
+                  <span class="hour-metric-value val-uv-low">1.3</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1196,11 +1233,11 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">9</span>
+                  <span class="hour-metric-value val-calm">5</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">19</span>
+                  <span class="hour-metric-value val-calm">14</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1224,7 +1261,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-low">2.4</span>
+                  <span class="hour-metric-value val-uv-low">2.5</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1256,7 +1293,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">16</span>
+                  <span class="hour-metric-value val-breezy">17</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1280,7 +1317,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-low">2.8</span>
+                  <span class="hour-metric-value val-uv-mod">3.3</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1308,11 +1345,11 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">6</span>
+                  <span class="hour-metric-value val-calm">8</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">16</span>
+                  <span class="hour-metric-value val-breezy">20</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1336,7 +1373,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-mod">4.2</span>
+                  <span class="hour-metric-value val-uv-mod">4.7</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1364,11 +1401,11 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">8</span>
+                  <span class="hour-metric-value val-calm">10</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">17</span>
+                  <span class="hour-metric-value val-breezy">23</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1392,7 +1429,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-mod">5.7</span>
+                  <span class="hour-metric-value val-uv-mod">5.8</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1416,15 +1453,15 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-hot">22°</span>
+                  <span class="hour-metric-value val-feels-hot">21°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">9</span>
+                  <span class="hour-metric-value val-calm">12</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">19</span>
+                  <span class="hour-metric-value val-breezy">26</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1448,7 +1485,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-mod">4.3</span>
+                  <span class="hour-metric-value val-uv-high">6.8</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1472,15 +1509,15 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-hot">22°</span>
+                  <span class="hour-metric-value val-feels-hot">21°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">11</span>
+                  <span class="hour-metric-value val-calm">12</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">23</span>
+                  <span class="hour-metric-value val-breezy">26</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1504,7 +1541,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-high">6.6</span>
+                  <span class="hour-metric-value val-uv-high">6.8</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1532,7 +1569,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">13</span>
+                  <span class="hour-metric-value val-calm">12</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
@@ -1560,7 +1597,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-high">6.3</span>
+                  <span class="hour-metric-value val-uv-mod">6.0</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1584,15 +1621,15 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-hot">21°</span>
+                  <span class="hour-metric-value val-feels-hot">22°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">14</span>
+                  <span class="hour-metric-value val-calm">12</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">27</span>
+                  <span class="hour-metric-value val-breezy">26</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1616,7 +1653,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-mod">5.2</span>
+                  <span class="hour-metric-value val-uv-mod">4.8</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1648,7 +1685,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">24</span>
+                  <span class="hour-metric-value val-breezy">27</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1672,7 +1709,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-mod">3.1</span>
+                  <span class="hour-metric-value val-uv-low">2.5</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1700,11 +1737,11 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">10</span>
+                  <span class="hour-metric-value val-calm">14</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">19</span>
+                  <span class="hour-metric-value val-breezy">27</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1728,7 +1765,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-low">1.6</span>
+                  <span class="hour-metric-value val-uv-low">1.1</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1752,19 +1789,19 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-hot">21°</span>
+                  <span class="hour-metric-value val-feels-hot">20°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">8</span>
+                  <span class="hour-metric-value val-breezy">15</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">16</span>
+                  <span class="hour-metric-value val-breezy">27</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
-                  <span class="hour-metric-value val-calm">W</span>
+                  <span class="hour-metric-value val-breezy">W</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Rain</span>
@@ -1784,7 +1821,7 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">UV</span>
-                  <span class="hour-metric-value val-uv-low">1.0</span>
+                  <span class="hour-metric-value val-uv-low">0.8</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Sun</span>
@@ -1808,15 +1845,15 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-hot">20°</span>
+                  <span class="hour-metric-value val-feels-warm">19°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">8</span>
+                  <span class="hour-metric-value val-calm">15</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">15</span>
+                  <span class="hour-metric-value val-breezy">26</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1864,15 +1901,15 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-warm">19°</span>
+                  <span class="hour-metric-value val-feels-warm">18°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">9</span>
+                  <span class="hour-metric-value val-calm">14</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">16</span>
+                  <span class="hour-metric-value val-breezy">24</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1920,15 +1957,15 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-feels">
                   <span class="hour-metric-label">Feels</span>
-                  <span class="hour-metric-value val-feels-warm">18°</span>
+                  <span class="hour-metric-value val-feels-warm">17°</span>
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">10</span>
+                  <span class="hour-metric-value val-calm">13</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-breezy">16</span>
+                  <span class="hour-metric-value val-breezy">23</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
@@ -1980,11 +2017,11 @@ footer {
                 </div>
                 <div class="hour-metric hour-metric-wind">
                   <span class="hour-metric-label">Wind</span>
-                  <span class="hour-metric-value val-calm">9</span>
+                  <span class="hour-metric-value val-calm">12</span>
                 </div>
                 <div class="hour-metric hour-metric-gust">
                   <span class="hour-metric-label">Gust</span>
-                  <span class="hour-metric-value val-calm">15</span>
+                  <span class="hour-metric-value val-breezy">21</span>
                 </div>
                 <div class="hour-metric hour-metric-detail">
                   <span class="hour-metric-label">Dir</span>
