@@ -929,8 +929,8 @@ def gen_index(location_name: str, current: dict, days: list) -> str:
   <div class="card-icon">🕐</div>
   <div class="card-condition">7-day hourly forecast</div>
   <div class="card-temp">
-    <span class="high">Scroll</span>
-    <span class="low">through all</span>
+    <span class="high">Hourly</span>
+    <span class="low">Forecast</span>
   </div>
 </a>'''
 
