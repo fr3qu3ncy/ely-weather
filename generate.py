@@ -900,17 +900,6 @@ def gen_index(location_name: str, current: dict, days: list) -> str:
             cur_html += f'''
   </div>
 </div>'''
-            # Hourly forecast card — placed right under Now
-            cards_html += f'''
-<a href="hourly.html" class="card hourly-link" style="text-decoration:none;color:inherit;">
-  <div class="card-day">Hourly</div>
-  <div class="card-icon">🕐</div>
-  <div class="card-condition">7-day hourly forecast</div>
-  <div class="card-temp">
-    <span class="high">Scroll</span>
-    <span class="low">through all</span>
-  </div>
-</a>'''
         else:
             cur_html = ""
 
@@ -929,6 +918,18 @@ def gen_index(location_name: str, current: dict, days: list) -> str:
     <div class="card-stat"><span class="label">⚡ Wind</span><span class="value">{d['wind_max']:.0f}/{d['wind_gust_max']:.0f} km/h</span></div>
     <div class="card-stat"><span class="label">🌞 Sun</span><span class="value">{d['sunshine']:.0f}h</span></div>
     <div class="card-stat"><span class="label">🔆 UV</span><span class="value">{d['uv_max']:.1f}</span></div>
+  </div>
+</a>'''
+        if d['is_today']:
+            # Hourly forecast card — placed right under Now
+            cards_html += f'''
+<a href="hourly.html" class="card hourly-link" style="text-decoration:none;color:inherit;">
+  <div class="card-day">Hourly</div>
+  <div class="card-icon">🕐</div>
+  <div class="card-condition">7-day hourly forecast</div>
+  <div class="card-temp">
+    <span class="high">Scroll</span>
+    <span class="low">through all</span>
   </div>
 </a>'''
 
