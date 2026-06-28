@@ -534,6 +534,7 @@ header .updated {
 .card.hourly-link {
   border-color: var(--sun);
   background: linear-gradient(135deg, var(--surface) 0%, #1e2235 100%);
+  grid-column: span 2;
 }
 .card.hourly-link::before { opacity: 1; background: var(--sun); }
 
