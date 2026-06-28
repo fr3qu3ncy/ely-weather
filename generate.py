@@ -7,8 +7,9 @@ Push to GitHub Pages at https://fr3qu3ncy.github.io/ely-weather/
 import json
 import urllib.parse
 import urllib.request
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 # ─── Config ───────────────────────────────────────────────────────────
 LOCATION = "Ely, Cambridgeshire"
@@ -125,7 +126,7 @@ def fetch_hourly_7d() -> dict:
                   "cloud_cover,precipitation,precipitation_probability,"
                   "wind_speed_10m,wind_direction_10m,wind_gusts_10m,"
                   "uv_index,relative_humidity_2m,sunshine_duration,"
-                  "pressure_msl",
+                  "pressure_msl,is_day",
     })
     with urllib.request.urlopen(f"{WEATHER_URL}?{params}") as r:
         return json.loads(r.read())
@@ -720,6 +721,55 @@ header .updated {
 }
 .card.hourly-link::before { display: none; }
 
+/* ─── Activities card ──────────────────────────────────────────── */
+.card.activities-card {
+  grid-column: span 2;
+  border-color: var(--accent);
+  padding: 1.25rem;
+}
+.card.activities-card::before { display: none; }
+.activities-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.activity-slot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.activity-slot:last-child { border-bottom: none; }
+.activity-icon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+  width: 2.5rem;
+  text-align: center;
+}
+.activity-info {
+  flex: 1;
+  min-width: 0;
+}
+.activity-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.15rem;
+}
+.activity-time {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+.activity-duration {
+  font-size: 0.7rem;
+  color: var(--accent);
+  margin-top: 0.1rem;
+}
+
 /* ─── Footer ─────────────────────────────────────────────── */
 footer {
   text-align: center;
@@ -881,7 +931,7 @@ def make_bar_html(pct: float, cls: str, value_str: str) -> str:
 def gen_css() -> str:
     return CSS
 
-def gen_index(location_name: str, current: dict, days: list) -> str:
+def gen_index(location_name: str, current: dict, days: list, activities = None):
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M")
     cw_code = current["weather_code"]
     cw_icon, cw_desc = wmo_info(cw_code)
@@ -939,6 +989,24 @@ def gen_index(location_name: str, current: dict, days: list) -> str:
 <a href="hourly.html" class="card hourly-link" style="text-decoration:none;color:inherit;">
   <span>Hourly Forecast</span>
 </a>'''
+            # Activities card — after hourly button
+            if activities:
+                act_cards = ""
+                for act in activities:
+                    act_cards += f'''
+<div class="activity-slot">
+  <div class="activity-icon">{act["icon"]}</div>
+  <div class="activity-info">
+    <div class="activity-name">{act["name"]}</div>
+    <div class="activity-time">{act["day"]}, {act["start"]}–{act["end"]}</div>
+    <div class="activity-duration">{act["duration"]}h window</div>
+  </div>
+</div>'''
+                cards_html += f'''
+<div class="card activities-card">
+  <div class="activities-header">Recommended Activities</div>
+  {act_cards}
+</div>'''
 
     return f'''<!DOCTYPE html>
 <html lang="en">
@@ -1483,6 +1551,88 @@ def gen_hourly(location_name: str, hourly_7d: dict) -> str:
 </body>
 </html>'''
 
+# ─── Activity recommendations ──────────────────────────────────────────
+def find_activities(hourly: dict) -> list:
+    """Scan hourly data for suitable activity windows. Returns list of activity dicts."""
+    times = hourly.get("time", [])
+    temps = hourly.get("temperature_2m", [])
+    clouds = hourly.get("cloud_cover", [])
+    winds = hourly.get("wind_speed_10m", [])
+    gusts = hourly.get("wind_gusts_10m", [])
+    is_day = hourly.get("is_day", [])
+    now = datetime.now(timezone.utc).astimezone(ZoneInfo(TZ))
+    slots = []
+
+    def fmt(t):
+        return datetime.fromisoformat(t).strftime("%H:%M")
+
+    def day_label(t):
+        dt = datetime.fromisoformat(t)
+        today = now.date()
+        tomorrow = today + timedelta(days=1)
+        if dt.date() == today:
+            return "Today"
+        elif dt.date() == tomorrow:
+            return "Tomorrow"
+        return dt.strftime("%a %d %b")
+
+    def find_consecutive(check, min_hours):
+        best = None
+        run = 0
+        run_start = None
+        for i in range(len(times)):
+            if check(i):
+                if run == 0:
+                    run_start = i
+                run += 1
+                if run >= min_hours and (best is None or run_start < best):
+                    best = run_start
+            else:
+                run = 0
+                run_start = None
+        if best is not None:
+            # Recalculate actual length
+            length = 0
+            for i in range(best, len(times)):
+                if check(i):
+                    length += 1
+                else:
+                    break
+            return best, length
+        return None, 0
+
+    # Wash car: cloud > 45%, 13 <= temp <= 29, min 1 hour
+    def wash_ok(i):
+        return clouds[i] > 45 and 13 <= temps[i] <= 29
+    start, length = find_consecutive(wash_ok, 1)
+    if start is not None:
+        end_idx = min(start + length, len(times))
+        slots.append({
+            "name": "Wash car",
+            "icon": "🚗",
+            "start": fmt(times[start]),
+            "end": fmt(times[end_idx - 1]),
+            "day": day_label(times[start]),
+            "duration": length,
+        })
+
+    # Astro photography: is_day==0, cloud < 90%, wind < 16.09 km/h (10 mph), gust < 32.19 km/h (20 mph), min 3 hours
+    def astro_ok(i):
+        return is_day[i] == 0 and clouds[i] < 90 and winds[i] < 16.09 and gusts[i] < 32.19
+    start, length = find_consecutive(astro_ok, 3)
+    if start is not None:
+        end_idx = min(start + length, len(times))
+        slots.append({
+            "name": "Astro photography",
+            "icon": "🔭",
+            "start": fmt(times[start]),
+            "end": fmt(times[end_idx - 1]),
+            "day": day_label(times[start]),
+            "duration": length,
+        })
+
+    return slots
+
 # ─── Main ─────────────────────────────────────────────────────────────
 def main():
     out_dir = Path("/tmp/ely-weather")
@@ -1497,13 +1647,17 @@ def main():
     hourly_7d = hourly_7d_data.get("hourly", {})
     print(f"  → {len(hourly_7d.get('time', []))} hours fetched")
 
+    # Activities
+    activities = find_activities(hourly_7d)
+    print(f"  → {len(activities)} activities found")
+
     # CSS
     print("Writing styles.css...")
     (out_dir / "styles.css").write_text(gen_css())
 
     # Index
     print("Writing index.html...")
-    (out_dir / "index.html").write_text(gen_index(location_name, current, days))
+    (out_dir / "index.html").write_text(gen_index(location_name, current, days, activities))
 
     # Day pages
     for d in days:

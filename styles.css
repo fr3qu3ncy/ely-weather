@@ -550,6 +550,55 @@ header .updated {
 }
 .card.hourly-link::before { display: none; }
 
+/* ─── Activities card ──────────────────────────────────────────── */
+.card.activities-card {
+  grid-column: span 2;
+  border-color: var(--accent);
+  padding: 1.25rem;
+}
+.card.activities-card::before { display: none; }
+.activities-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-bottom: 0.75rem;
+}
+.activity-slot {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border);
+}
+.activity-slot:last-child { border-bottom: none; }
+.activity-icon {
+  font-size: 1.75rem;
+  flex-shrink: 0;
+  width: 2.5rem;
+  text-align: center;
+}
+.activity-info {
+  flex: 1;
+  min-width: 0;
+}
+.activity-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.15rem;
+}
+.activity-time {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+.activity-duration {
+  font-size: 0.7rem;
+  color: var(--accent);
+  margin-top: 0.1rem;
+}
+
 /* ─── Footer ─────────────────────────────────────────────── */
 footer {
   text-align: center;
