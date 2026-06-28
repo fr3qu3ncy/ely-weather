@@ -729,7 +729,7 @@ header .updated {
 }
 .card.activities-card::before { display: none; }
 .activities-header {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -739,15 +739,15 @@ header .updated {
 .activity-slot {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 0;
+  gap: 1.25rem;
+  padding: 1rem 0;
   border-bottom: 1px solid var(--border);
 }
 .activity-slot:last-child { border-bottom: none; }
 .activity-icon {
-  font-size: 1.75rem;
+  font-size: 2.25rem;
   flex-shrink: 0;
-  width: 2.5rem;
+  width: 3rem;
   text-align: center;
 }
 .activity-info {
@@ -756,18 +756,21 @@ header .updated {
 }
 .activity-name {
   font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--text);
-  margin-bottom: 0.15rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 0.2rem;
 }
 .activity-time {
-  font-size: 0.8rem;
-  color: var(--text-dim);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.01em;
 }
 .activity-duration {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--accent);
-  margin-top: 0.1rem;
+  margin-top: 0.15rem;
+  font-weight: 500;
 }
 
 /* ─── Footer ─────────────────────────────────────────────── */
@@ -1561,6 +1564,16 @@ def find_activities(hourly: dict) -> list:
     gusts = hourly.get("wind_gusts_10m", [])
     is_day = hourly.get("is_day", [])
     now = datetime.now(timezone.utc).astimezone(ZoneInfo(TZ))
+    # Skip to next hour
+    now_hour = now.replace(minute=0, second=0, microsecond=0)
+    skip_before = None
+    tz_info = ZoneInfo(TZ)
+    for i, t in enumerate(times):
+        dt_t = datetime.fromisoformat(t).replace(tzinfo=tz_info)
+        if dt_t >= now_hour:
+            skip_before = i
+            break
+
     slots = []
 
     def fmt(t):
@@ -1576,11 +1589,11 @@ def find_activities(hourly: dict) -> list:
             return "Tomorrow"
         return dt.strftime("%a %d %b")
 
-    def find_consecutive(check, min_hours):
+    def find_consecutive(check, min_hours, start_from=0):
         best = None
         run = 0
         run_start = None
-        for i in range(len(times)):
+        for i in range(start_from, len(times)):
             if check(i):
                 if run == 0:
                     run_start = i
@@ -1591,7 +1604,6 @@ def find_activities(hourly: dict) -> list:
                 run = 0
                 run_start = None
         if best is not None:
-            # Recalculate actual length
             length = 0
             for i in range(best, len(times)):
                 if check(i):
@@ -1601,10 +1613,10 @@ def find_activities(hourly: dict) -> list:
             return best, length
         return None, 0
 
-    # Wash car: cloud > 45%, 13 <= temp <= 29, min 1 hour
+    # Wash car: daylight, cloud > 45%, 13 <= temp <= 29, min 1 hour
     def wash_ok(i):
-        return clouds[i] > 45 and 13 <= temps[i] <= 29
-    start, length = find_consecutive(wash_ok, 1)
+        return is_day[i] == 1 and clouds[i] > 45 and 13 <= temps[i] <= 29
+    start, length = find_consecutive(wash_ok, 1, skip_before or 0)
     if start is not None:
         end_idx = min(start + length, len(times))
         slots.append({
@@ -1619,7 +1631,7 @@ def find_activities(hourly: dict) -> list:
     # Astro photography: is_day==0, cloud < 90%, wind < 16.09 km/h (10 mph), gust < 32.19 km/h (20 mph), min 3 hours
     def astro_ok(i):
         return is_day[i] == 0 and clouds[i] < 90 and winds[i] < 16.09 and gusts[i] < 32.19
-    start, length = find_consecutive(astro_ok, 3)
+    start, length = find_consecutive(astro_ok, 3, skip_before or 0)
     if start is not None:
         end_idx = min(start + length, len(times))
         slots.append({

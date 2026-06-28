@@ -564,7 +564,7 @@ header .updated {
 }
 .card.activities-card::before { display: none; }
 .activities-header {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -574,15 +574,15 @@ header .updated {
 .activity-slot {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 0;
+  gap: 1.25rem;
+  padding: 1rem 0;
   border-bottom: 1px solid var(--border);
 }
 .activity-slot:last-child { border-bottom: none; }
 .activity-icon {
-  font-size: 1.75rem;
+  font-size: 2.25rem;
   flex-shrink: 0;
-  width: 2.5rem;
+  width: 3rem;
   text-align: center;
 }
 .activity-info {
@@ -591,18 +591,21 @@ header .updated {
 }
 .activity-name {
   font-weight: 600;
-  font-size: 0.9rem;
-  color: var(--text);
-  margin-bottom: 0.15rem;
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 0.2rem;
 }
 .activity-time {
-  font-size: 0.8rem;
-  color: var(--text-dim);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: 0.01em;
 }
 .activity-duration {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--accent);
-  margin-top: 0.1rem;
+  margin-top: 0.15rem;
+  font-weight: 500;
 }
 
 /* ─── Footer ─────────────────────────────────────────────── */
@@ -659,7 +662,7 @@ footer {
 <header>
   <h1>🌤️ Ely Weather</h1>
   <div class="subtitle">Ely, East Cambridgeshire, Cambridgeshire, Cambridgeshire and Peterborough, England, United Kingdom</div>
-  <div class="updated">Generated 2026-06-28 21:35 BST</div>
+  <div class="updated">Generated 2026-06-28 21:57 BST</div>
 </header>
 <div class="container">
   <div class="forecast-grid">
@@ -701,7 +704,7 @@ footer {
   <div class="activity-icon">🚗</div>
   <div class="activity-info">
     <div class="activity-name">Wash car</div>
-    <div class="activity-time">Today, 09:00–09:00</div>
+    <div class="activity-time">Today, 21:00–21:00</div>
     <div class="activity-duration">1h window</div>
   </div>
 </div>
@@ -709,8 +712,8 @@ footer {
   <div class="activity-icon">🔭</div>
   <div class="activity-info">
     <div class="activity-name">Astro photography</div>
-    <div class="activity-time">Today, 00:00–04:00</div>
-    <div class="activity-duration">5h window</div>
+    <div class="activity-time">Tomorrow, 01:00–04:00</div>
+    <div class="activity-duration">4h window</div>
   </div>
 </div>
 </div>
