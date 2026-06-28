@@ -700,13 +700,25 @@ header .updated {
   white-space: nowrap;
 }
 
-/* ─── Hourly card: link variant on index ─────────────────── */
+/* ─── Hourly card: button-style link on index ────────────── */
 .card.hourly-link {
-  border-color: var(--sun);
-  background: linear-gradient(135deg, var(--surface) 0%, #1e2235 100%);
   grid-column: span 2;
+  border-color: var(--sun);
+  background: var(--surface);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: var(--sun);
+  min-height: auto;
 }
-.card.hourly-link::before { opacity: 1; background: var(--sun); }
+.card.hourly-link:hover {
+  background: #1e2235;
+}
+.card.hourly-link::before { display: none; }
 
 /* ─── Footer ─────────────────────────────────────────────── */
 footer {
@@ -925,13 +937,7 @@ def gen_index(location_name: str, current: dict, days: list) -> str:
             # Hourly forecast card — placed right under Now
             cards_html += f'''
 <a href="hourly.html" class="card hourly-link" style="text-decoration:none;color:inherit;">
-  <div class="card-day">Hourly</div>
-  <div class="card-icon">🕐</div>
-  <div class="card-condition">7-day hourly forecast</div>
-  <div class="card-temp">
-    <span class="high">Hourly</span>
-    <span class="low">Forecast</span>
-  </div>
+  <span>Hourly Forecast</span>
 </a>'''
 
     return f'''<!DOCTYPE html>
