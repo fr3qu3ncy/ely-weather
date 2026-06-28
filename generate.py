@@ -116,6 +116,20 @@ def fetch_hourly(date_str: str) -> dict:
     with urllib.request.urlopen(f"{WEATHER_URL}?{params}") as r:
         return json.loads(r.read())
 
+def fetch_hourly_7d() -> dict:
+    """Fetch 7 days of hourly data in one call."""
+    params = urllib.parse.urlencode({
+        "latitude": LAT, "longitude": LON, "timezone": TZ,
+        "forecast_days": 7,
+        "hourly": "temperature_2m,apparent_temperature,weather_code,"
+                  "cloud_cover,precipitation,precipitation_probability,"
+                  "wind_speed_10m,wind_direction_10m,wind_gusts_10m,"
+                  "uv_index,relative_humidity_2m,sunshine_duration,"
+                  "pressure_msl",
+    })
+    with urllib.request.urlopen(f"{WEATHER_URL}?{params}") as r:
+        return json.loads(r.read())
+
 # ─── Data processing ─────────────────────────────────────────────────
 def process_weather():
     location_name = geocode(LOCATION)
@@ -656,6 +670,43 @@ header .updated {
   text-align: right;
 }
 
+/* ─── Day separator (multi-day hourly page) ──────────────── */
+.day-separator {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0 0.75rem;
+  padding: 0.5rem 0;
+}
+.day-separator::before,
+.day-separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.day-separator .day-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.day-separator .day-date {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  white-space: nowrap;
+}
+
+/* ─── Hourly card: link variant on index ─────────────────── */
+.card.hourly-link {
+  border-color: var(--sun);
+  background: linear-gradient(135deg, var(--surface) 0%, #1e2235 100%);
+}
+.card.hourly-link::before { opacity: 1; background: var(--sun); }
+
 /* ─── Footer ─────────────────────────────────────────────── */
 footer {
   text-align: center;
@@ -849,6 +900,17 @@ def gen_index(location_name: str, current: dict, days: list) -> str:
             cur_html += f'''
   </div>
 </div>'''
+            # Hourly forecast card — placed right under Now
+            cards_html += f'''
+<a href="hourly.html" class="card hourly-link" style="text-decoration:none;color:inherit;">
+  <div class="card-day">Hourly</div>
+  <div class="card-icon">🕐</div>
+  <div class="card-condition">7-day hourly forecast</div>
+  <div class="card-temp">
+    <span class="high">Scroll</span>
+    <span class="low">through all</span>
+  </div>
+</a>'''
         else:
             cur_html = ""
 
@@ -1207,6 +1269,212 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
 </body>
 </html>'''
 
+# ─── Multi-day hourly JS ─────────────────────────────────────────────
+HOURLY_JS = '''<script>
+(function(){
+  function highlightNow(){
+    var now=new Date(), ts=now.toISOString().slice(0,13);
+    document.querySelectorAll(".hour-card.current-hour").forEach(function(c){c.classList.remove("current-hour")});
+    document.querySelectorAll(".hour-card.past-hour").forEach(function(c){c.classList.remove("past-hour")});
+    document.querySelectorAll(".hour-card").forEach(function(c){
+      var ct=c.getAttribute("data-ts");
+      if(!ct) return;
+      if(ct < ts) c.classList.add("past-hour");
+    });
+    var card=document.querySelector('.hour-card[data-ts="'+ts+'"]');
+    if(card) card.classList.add("current-hour");
+  }
+  highlightNow();
+  setInterval(highlightNow, 60000);
+})();
+</script>'''
+
+def gen_hourly(location_name: str, hourly_7d: dict) -> str:
+    """Generate the hourly forecast page spanning all 7 days."""
+    times = hourly_7d.get("time", [])
+
+    def temp_color(val):
+        if val is None: return ""
+        if val >= 20: return "val-hot"
+        if val >= 15: return "val-warm"
+        if val >= 10: return "val-cool"
+        return "val-cold"
+
+    def feels_color(val):
+        if val is None: return ""
+        if val >= 20: return "val-feels-hot"
+        if val >= 15: return "val-feels-warm"
+        if val >= 10: return "val-feels-cool"
+        return "val-feels-cold"
+
+    def rain_color(val):
+        if val is None: return ""
+        if val == 0: return "val-dry"
+        if val < 2: return "val-drizzle"
+        if val < 10: return "val-rainy"
+        return "val-wet"
+
+    def wind_color(val):
+        if val is None: return ""
+        if val < 15: return "val-calm"
+        if val < 30: return "val-breezy"
+        if val < 50: return "val-windy"
+        return "val-stormy"
+
+    def cloud_color(val):
+        if val is None: return ""
+        if val < 30: return "val-clear"
+        if val < 70: return "val-cloudy"
+        return "val-overcast"
+
+    def humid_color(val):
+        if val is None: return ""
+        if val < 40: return "val-humid-low"
+        if val < 60: return "val-humid-mid"
+        if val < 80: return "val-humid-high"
+        return "val-humid-soak"
+
+    def uv_color(val):
+        if val is None: return ""
+        if val < 3: return "val-uv-low"
+        if val < 6: return "val-uv-mod"
+        if val < 8: return "val-uv-high"
+        return "val-uv-ext"
+
+    def press_color(val):
+        if val is None: return ""
+        if val >= 1015: return "val-press-high"
+        if val >= 1005: return "val-press-mid"
+        return "val-press-low"
+
+    def sun_color(val):
+        if val is None: return ""
+        dur = val / 3600 if val else 0
+        if dur >= 0.5: return "val-sun-high"
+        if dur >= 0.1: return "val-sun-mid"
+        return "val-sun-low"
+
+    cards = ""
+    current_day = None
+    day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    month_names = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+
+    for i in range(len(times)):
+        t = times[i]
+        # Parse date for day separator
+        dt = datetime.strptime(t, "%Y-%m-%dT%H:%M")
+        day_str = dt.strftime("%Y-%m-%d")
+
+        if day_str != current_day:
+            current_day = day_str
+            day_name = day_names[dt.weekday()]
+            date_display = f"{dt.day} {month_names[dt.month - 1]} {dt.year}"
+            if dt.date() == datetime.now().date():
+                cards += f'<div class="day-separator"><span class="day-label">Today</span><span class="day-date">{date_display}</span></div>'
+            else:
+                cards += f'<div class="day-separator"><span class="day-label">{day_name}</span><span class="day-date">{date_display}</span></div>'
+
+        tc = hourly_7d.get("temperature_2m", [None]*len(times))[i]
+        at = hourly_7d.get("apparent_temperature", [None]*len(times))[i]
+        wc = hourly_7d.get("weather_code", [0]*len(times))[i]
+        pr = hourly_7d.get("precipitation", [0]*len(times))[i]
+        pp = hourly_7d.get("precipitation_probability", [0]*len(times))[i]
+        ws = hourly_7d.get("wind_speed_10m", [0]*len(times))[i]
+        wd = hourly_7d.get("wind_direction_10m", [0]*len(times))[i]
+        cc = hourly_7d.get("cloud_cover", [0]*len(times))[i]
+        sun = hourly_7d.get("sunshine_duration", [0]*len(times))[i]
+        uv = hourly_7d.get("uv_index", [0]*len(times))[i]
+        hu = hourly_7d.get("relative_humidity_2m", [0]*len(times))[i]
+        ps = hourly_7d.get("pressure_msl", [0]*len(times))[i]
+
+        h_icon, h_desc = wmo_info(wc)
+
+        cards += f'''<div class="hour-card" data-ts="{t[:13]}">
+          <div class="hour-left">
+            <span class="hour-now-badge">NOW</span>
+            <span class="hour-time">{t[11:13]}:00</span>
+            <span class="hour-icon">{h_icon}</span>
+          </div>
+          <div class="hour-right">
+            <div class="hour-metric hour-metric-temp">
+              <span class="hour-metric-label">Temp</span>
+              <span class="hour-metric-value {temp_color(tc)}">{tc:.0f}°</span>
+            </div>
+            <div class="hour-metric hour-metric-feels">
+              <span class="hour-metric-label">Feels</span>
+              <span class="hour-metric-value {feels_color(at)}">{at:.0f}°</span>
+            </div>
+            <div class="hour-metric hour-metric-wind">
+              <span class="hour-metric-label">Wind</span>
+              <span class="hour-metric-value {wind_color(ws)}">{ws:.0f}</span>
+            </div>
+            <div class="hour-metric hour-metric-gust">
+              <span class="hour-metric-label">Gust</span>
+              <span class="hour-metric-value {wind_color(hourly_7d.get('wind_gusts_10m',[0]*len(times))[i])}">{hourly_7d.get('wind_gusts_10m',[0]*len(times))[i]:.0f}</span>
+            </div>
+            <div class="hour-metric hour-metric-detail">
+              <span class="hour-metric-label">Dir</span>
+              <span class="hour-metric-value {wind_color(ws)}">{wind_dir(wd)}</span>
+            </div>
+            <div class="hour-metric hour-metric-detail">
+              <span class="hour-metric-label">Rain</span>
+              <span class="hour-metric-value {rain_color(pp)}">{pp}%</span>
+            </div>
+            <div class="hour-metric hour-metric-detail">
+              <span class="hour-metric-label">Rain</span>
+              <span class="hour-metric-value {rain_color(pr)}">{pr:.1f}<span class="hour-metric-unit">mm</span></span>
+            </div>
+            <div class="hour-metric hour-metric-detail">
+              <span class="hour-metric-label">Cloud</span>
+              <span class="hour-metric-value {cloud_color(cc)}">{cc}%</span>
+            </div>
+            <div class="hour-metric hour-metric-detail">
+              <span class="hour-metric-label">Humid</span>
+              <span class="hour-metric-value {humid_color(hu)}">{hu}%</span>
+            </div>
+            <div class="hour-metric hour-metric-detail">
+              <span class="hour-metric-label">UV</span>
+              <span class="hour-metric-value {uv_color(uv)}">{uv:.1f}</span>
+            </div>
+            <div class="hour-metric hour-metric-detail">
+              <span class="hour-metric-label">Sun</span>
+              <span class="hour-metric-value {sun_color(sun)}">{sun/3600:.1f}h</span>
+            </div>
+            <div class="hour-metric hour-metric-detail">
+              <span class="hour-metric-label">Press</span>
+              <span class="hour-metric-value {press_color(ps)}">{ps:.0f}</span>
+            </div>
+          </div>
+        </div>'''
+
+    return f'''<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hourly Forecast — Ely Weather</title>
+<style>{CSS}</style>
+</head>
+<body>
+<header>
+  <h1>🌤️ Ely Weather</h1>
+  <div class="subtitle">{location_name}</div>
+</header>
+<div class="container">
+  <a href="index.html" class="detail-back">← Back to forecast</a>
+  <div class="detail-header">
+    <h2>Hourly Forecast</h2>
+    <div class="condition">7-day hourly breakdown</div>
+  </div>
+  <div class="hourly-list">{cards}</div>
+</div>
+<footer>
+  Data from Open-Meteo · <a href="index.html">7-day forecast</a>
+</footer>
+{HOURLY_JS}
+</body>
+</html>'''
+
 # ─── Main ─────────────────────────────────────────────────────────────
 def main():
     out_dir = Path("/tmp/ely-weather")
@@ -1215,6 +1483,11 @@ def main():
     print("Fetching location...")
     location_name, current, days = process_weather()
     print(f"  → {location_name}")
+
+    print("Fetching 7-day hourly data...")
+    hourly_7d_data = fetch_hourly_7d()
+    hourly_7d = hourly_7d_data.get("hourly", {})
+    print(f"  → {len(hourly_7d.get('time', []))} hours fetched")
 
     # CSS
     print("Writing styles.css...")
@@ -1229,6 +1502,10 @@ def main():
         path = out_dir / f"day-{d['date']}.html"
         path.write_text(gen_day(location_name, d, current))
         print(f"  → day-{d['date']}.html")
+
+    # Hourly page
+    print("Writing hourly.html...")
+    (out_dir / "hourly.html").write_text(gen_hourly(location_name, hourly_7d))
 
     # CNAME for GitHub Pages custom domain (optional)
     # (out_dir / "CNAME").write_text("ely.fr3qu3ncy.com")
