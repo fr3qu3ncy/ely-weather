@@ -1579,6 +1579,10 @@ def find_activities(hourly: dict) -> list:
     def fmt(t):
         return datetime.fromisoformat(t).strftime("%H:%M")
 
+    def fmt_end(t):
+        # End of the hour slot (start + 1h)
+        return (datetime.fromisoformat(t) + timedelta(hours=1)).strftime("%H:%M")
+
     def day_label(t):
         dt = datetime.fromisoformat(t)
         today = now.date()
@@ -1623,7 +1627,7 @@ def find_activities(hourly: dict) -> list:
             "name": "Wash car",
             "icon": "🚗",
             "start": fmt(times[start]),
-            "end": fmt(times[end_idx - 1]),
+            "end": fmt_end(times[end_idx - 1]),
             "day": day_label(times[start]),
             "duration": length,
         })
@@ -1638,7 +1642,7 @@ def find_activities(hourly: dict) -> list:
             "name": "Astro photography",
             "icon": "🔭",
             "start": fmt(times[start]),
-            "end": fmt(times[end_idx - 1]),
+            "end": fmt_end(times[end_idx - 1]),
             "day": day_label(times[start]),
             "duration": length,
         })
@@ -1687,7 +1691,7 @@ def find_activities(hourly: dict) -> list:
             "name": "Gardening",
             "icon": "🌱",
             "start": fmt(times[garden_start]),
-            "end": fmt(times[end_idx - 1]),
+            "end": fmt_end(times[end_idx - 1]),
             "day": day_label(times[garden_start]),
             "duration": garden_len,
         })
