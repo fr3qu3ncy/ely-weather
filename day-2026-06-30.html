@@ -2165,7 +2165,7 @@ footer {
     if(document.getElementById("live-temp-day"))updD(j);return true}catch(e){return false}}
   async function go(){
     try{var r=await fetch("https://api.open-meteo.com/v1/forecast?latitude=52.25&longitude=0.15&timezone=Europe%2FLondon&current_weather=true&hourly=apparent_temperature,relative_humidity_2m,pressure_msl&forecast_days=1");
-      var d=await r.json(),now=new Date(),ns=now.toISOString().slice(0,13);
+      var d=await r.json(),now=new Date(),ns=(now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+'T'+String(now.getHours()).padStart(2,'0'));
       var tm=d.hourly?d.hourly.time:[],ix=0;
       for(var i=0;i<tm.length;i++){if(tm[i]>=ns){ix=i;break}}
       var cw=d.current_weather||{},hr=d.hourly||{};
