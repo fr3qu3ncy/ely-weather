@@ -1670,20 +1670,7 @@ def find_activities(hourly: dict) -> list:
         return True
 
     # Find first consecutive 2-hour garden window
-    garden_start = None
-    garden_len = 0
-    for i in range((skip_before or 0), len(times)):
-        if garden_ok(i):
-            if garden_start is None:
-                garden_start = i
-                garden_len = 1
-            else:
-                garden_len += 1
-            if garden_len >= 2:
-                break
-        else:
-            garden_start = None
-            garden_len = 0
+    garden_start, garden_len = find_consecutive(garden_ok, 2, skip_before or 0)
 
     if garden_start is not None and garden_len >= 2:
         end_idx = min(garden_start + garden_len, len(times))
