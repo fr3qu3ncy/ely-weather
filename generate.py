@@ -1250,7 +1250,7 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
 
             h_icon, h_desc = wmo_info(wc)
 
-            cards += f'''<div class="hour-card" data-time="{t}">
+            cards += f'''<div class="hour-card" data-time="{t[:13]}">
               <div class="hour-left">
                 <span class="hour-now-badge">NOW</span>
                 <span class="hour-time">{t[11:13]}:00</span>
