@@ -1649,7 +1649,7 @@ def find_activities(hourly: dict) -> list:
         })
 
     # Gardening: no rain 4h before slot, daylight, no rain during slot,
-    # wind < 45.06 km/h (28 mph), cloud <= 60%, min 2 hours
+    # wind < 28.97 km/h (18 mph), cloud <= 60%, min 2 hours
 
     def garden_ok(i):
         # Check 4h dry period before this index
@@ -1663,7 +1663,7 @@ def find_activities(hourly: dict) -> list:
             return False
         if precip[i] > 0:
             return False
-        if winds[i] >= 45.06:
+        if winds[i] >= 28.97:
             return False
         if clouds[i] > 60:
             return False
