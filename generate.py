@@ -112,7 +112,7 @@ def fetch_hourly(date_str: str) -> dict:
                   "cloud_cover,precipitation,precipitation_probability,"
                   "wind_speed_10m,wind_direction_10m,wind_gusts_10m,"
                   "uv_index,relative_humidity_2m,sunshine_duration,"
-                  "pressure_msl",
+                  "pressure_msl,is_day",
     })
     with urllib.request.urlopen(f"{WEATHER_URL}?{params}") as r:
         return json.loads(r.read())
@@ -823,8 +823,17 @@ footer {
 .live-meta-item .val { font-weight: 600; }
 """
 
-def wmo_info(code: int) -> tuple:
-    return WMO.get(code, (f"Code {code}", "🌡️"))[::-1]
+def wmo_info(code: int, is_day: int = 1) -> tuple:
+    desc, icon = WMO.get(code, (f"Code {code}", "🌡️"))
+    # Swap sun icons for moon at night
+    if is_day == 0:
+        if icon == "☀️":
+            icon = "🌙"
+        elif icon == "🌤️":
+            icon = "🌙"
+        elif icon == "⛅":
+            icon = "☁️"
+    return (icon, desc)
 
 # ─── Live weather JS ──────────────────────────────────────────────────
 LIVE_JS = '''<script>
@@ -1247,8 +1256,9 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
             uv = hourly.get("uv_index", [0]*24)[i]
             hu = hourly.get("relative_humidity_2m", [0]*24)[i]
             ps = hourly.get("pressure_msl", [0]*24)[i]
+            iday = hourly.get("is_day", [1]*24)[i]
 
-            h_icon, h_desc = wmo_info(wc)
+            h_icon, h_desc = wmo_info(wc, iday)
 
             cards += f'''<div class="hour-card" data-time="{t[:13]}">
               <div class="hour-left">
@@ -1465,8 +1475,9 @@ def gen_hourly(location_name: str, hourly_7d: dict) -> str:
         uv = hourly_7d.get("uv_index", [0]*len(times))[i]
         hu = hourly_7d.get("relative_humidity_2m", [0]*len(times))[i]
         ps = hourly_7d.get("pressure_msl", [0]*len(times))[i]
+        iday = hourly_7d.get("is_day", [1]*len(times))[i]
 
-        h_icon, h_desc = wmo_info(wc)
+        h_icon, h_desc = wmo_info(wc, iday)
 
         cards += f'''<div class="hour-card" data-time="{t[:13]}">
           <div class="hour-left">
