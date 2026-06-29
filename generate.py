@@ -1643,6 +1643,55 @@ def find_activities(hourly: dict) -> list:
             "duration": length,
         })
 
+    # Gardening: no rain 4h before slot, daylight, no rain during slot,
+    # wind < 24.14 km/h (15 mph), cloud <= 60%, min 2 hours
+    precip = hourly.get("precipitation", [])
+
+    def garden_ok(i):
+        # Check 4h dry period before this index
+        if i < 4:
+            return False
+        for j in range(i - 4, i):
+            if precip[j] > 0:
+                return False
+        # Slot conditions
+        if is_day[i] != 1:
+            return False
+        if precip[i] > 0:
+            return False
+        if winds[i] >= 24.14:
+            return False
+        if clouds[i] > 60:
+            return False
+        return True
+
+    # Find first consecutive 2-hour garden window
+    garden_start = None
+    garden_len = 0
+    for i in range((skip_before or 0), len(times)):
+        if garden_ok(i):
+            if garden_start is None:
+                garden_start = i
+                garden_len = 1
+            else:
+                garden_len += 1
+            if garden_len >= 2:
+                break
+        else:
+            garden_start = None
+            garden_len = 0
+
+    if garden_start is not None and garden_len >= 2:
+        end_idx = min(garden_start + garden_len, len(times))
+        slots.append({
+            "name": "Gardening",
+            "icon": "🌱",
+            "start": fmt(times[garden_start]),
+            "end": fmt(times[end_idx - 1]),
+            "day": day_label(times[garden_start]),
+            "duration": garden_len,
+        })
+
     return slots
 
 # ─── Main ─────────────────────────────────────────────────────────────
