@@ -1628,9 +1628,9 @@ def find_activities(hourly: dict) -> list:
             "duration": length,
         })
 
-    # Astro photography: is_day==0, cloud < 90%, wind < 16.09 km/h (10 mph), gust < 32.19 km/h (20 mph), min 3 hours
+    # Astro photography: is_day==0, cloud <= 10%, wind < 16.09 km/h (10 mph), gust < 32.19 km/h (20 mph), min 3 hours
     def astro_ok(i):
-        return is_day[i] == 0 and clouds[i] < 90 and winds[i] < 16.09 and gusts[i] < 32.19
+        return is_day[i] == 0 and clouds[i] <= 10 and winds[i] < 16.09 and gusts[i] < 32.19
     start, length = find_consecutive(astro_ok, 3, skip_before or 0)
     if start is not None:
         end_idx = min(start + length, len(times))
