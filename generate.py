@@ -1563,6 +1563,7 @@ def find_activities(hourly: dict) -> list:
     winds = hourly.get("wind_speed_10m", [])
     gusts = hourly.get("wind_gusts_10m", [])
     is_day = hourly.get("is_day", [])
+    precip = hourly.get("precipitation", [])
     now = datetime.now(timezone.utc).astimezone(ZoneInfo(TZ))
     # Skip to next hour
     now_hour = now.replace(minute=0, second=0, microsecond=0)
@@ -1617,9 +1618,9 @@ def find_activities(hourly: dict) -> list:
             return best, length
         return None, 0
 
-    # Wash car: daylight, cloud > 45%, 13 <= temp <= 29, min 1 hour
+    # Wash car: daylight, no rain, cloud > 45%, 13 <= temp <= 29, min 1 hour
     def wash_ok(i):
-        return is_day[i] == 1 and clouds[i] > 45 and 13 <= temps[i] <= 29
+        return is_day[i] == 1 and precip[i] == 0 and clouds[i] > 45 and 13 <= temps[i] <= 29
     start, length = find_consecutive(wash_ok, 1, skip_before or 0)
     if start is not None:
         end_idx = min(start + length, len(times))
@@ -1649,7 +1650,6 @@ def find_activities(hourly: dict) -> list:
 
     # Gardening: no rain 4h before slot, daylight, no rain during slot,
     # wind < 24.14 km/h (15 mph), cloud <= 60%, min 2 hours
-    precip = hourly.get("precipitation", [])
 
     def garden_ok(i):
         # Check 4h dry period before this index
