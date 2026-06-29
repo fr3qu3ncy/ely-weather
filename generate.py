@@ -889,19 +889,19 @@ LIVE_JS = '''<script>
 CURRENT_HOUR_JS = '''<script>
 (function(){
   function highlightNow(){
-    var h=String(new Date().getHours()).padStart(2,"0");
-    var hv=parseInt(h,10);
+    var now=new Date(), ts=now.toISOString().slice(0,13);
     document.querySelectorAll(".hour-card.current-hour").forEach(function(c){c.classList.remove("current-hour")});
     document.querySelectorAll(".hour-card.past-hour").forEach(function(c){c.classList.remove("past-hour")});
     document.querySelectorAll(".hour-card").forEach(function(c){
-      var ch=parseInt(c.getAttribute("data-hour"),10);
-      if(ch<hv)c.classList.add("past-hour");
+      var ct=c.getAttribute("data-time");
+      if(!ct) return;
+      if(ct < ts) c.classList.add("past-hour");
     });
-    var card=document.querySelector('.hour-card[data-hour="'+h+'"]');
-    if(card)card.classList.add("current-hour");
+    var card=document.querySelector('.hour-card[data-time="'+ts+'"]');
+    if(card) card.classList.add("current-hour");
   }
   highlightNow();
-  setInterval(highlightNow,60000);
+  setInterval(highlightNow, 60000);
 })();
 </script>'''
 
@@ -1250,7 +1250,7 @@ def gen_day(location_name: str, day: dict, current: dict) -> str:
 
             h_icon, h_desc = wmo_info(wc)
 
-            cards += f'''<div class="hour-card" data-hour="{t[11:13]}">
+            cards += f'''<div class="hour-card" data-time="{t}">
               <div class="hour-left">
                 <span class="hour-now-badge">NOW</span>
                 <span class="hour-time">{t[11:13]}:00</span>
@@ -1356,11 +1356,11 @@ HOURLY_JS = '''<script>
     document.querySelectorAll(".hour-card.current-hour").forEach(function(c){c.classList.remove("current-hour")});
     document.querySelectorAll(".hour-card.past-hour").forEach(function(c){c.classList.remove("past-hour")});
     document.querySelectorAll(".hour-card").forEach(function(c){
-      var ct=c.getAttribute("data-ts");
+      var ct=c.getAttribute("data-time");
       if(!ct) return;
       if(ct < ts) c.classList.add("past-hour");
     });
-    var card=document.querySelector('.hour-card[data-ts="'+ts+'"]');
+    var card=document.querySelector('.hour-card[data-time="'+ts+'"]');
     if(card) card.classList.add("current-hour");
   }
   highlightNow();
@@ -1468,7 +1468,7 @@ def gen_hourly(location_name: str, hourly_7d: dict) -> str:
 
         h_icon, h_desc = wmo_info(wc)
 
-        cards += f'''<div class="hour-card" data-ts="{t[:13]}">
+        cards += f'''<div class="hour-card" data-time="{t[:13]}">
           <div class="hour-left">
             <span class="hour-now-badge">NOW</span>
             <span class="hour-time">{t[11:13]}:00</span>
