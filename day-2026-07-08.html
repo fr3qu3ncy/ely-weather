@@ -2141,8 +2141,8 @@ footer {
         w=document.getElementById("live-wind-index"),p=document.getElementById("live-pressure-index");
     if(!t)return;var c=wmo(d.code);
     if(b){b.className="live-badge";b.innerHTML='<span class="dot"></span> Updated '+ts()}
-    if(t)t.textContent=c[1]+" "+Math.round(d.temp)+"\u00b0C";
-    if(f)f.textContent=Math.round(d.ap)+"\u00b0C";
+    if(t)t.textContent=c[1]+" "+d.temp.toFixed(1)+"\u00b0C";
+    if(f)f.textContent=d.ap.toFixed(1)+"\u00b0C";
     if(h)h.textContent=d.hu+"%";
     if(w)w.textContent=d.ws+" km/h "+wd(d.wd);
     if(p&&d.pr!==null)p.textContent=Math.round(d.pr)+" hPa";

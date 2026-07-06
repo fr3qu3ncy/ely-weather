@@ -850,8 +850,8 @@ LIVE_JS = '''<script>
         w=document.getElementById("live-wind-index"),p=document.getElementById("live-pressure-index");
     if(!t)return;var c=wmo(d.code);
     if(b){b.className="live-badge";b.innerHTML='<span class="dot"></span> Updated '+ts()}
-    if(t)t.textContent=c[1]+" "+Math.round(d.temp)+"\\u00b0C";
-    if(f)f.textContent=Math.round(d.ap)+"\\u00b0C";
+    if(t)t.textContent=c[1]+" "+d.temp.toFixed(1)+"\\u00b0C";
+    if(f)f.textContent=d.ap.toFixed(1)+"\\u00b0C";
     if(h)h.textContent=d.hu+"%";
     if(w)w.textContent=d.ws+" km/h "+wd(d.wd);
     if(p&&d.pr!==null)p.textContent=Math.round(d.pr)+" hPa";
@@ -964,9 +964,9 @@ def gen_index(location_name: str, current: dict, days: list, activities = None):
 <div class="current-section" id="live-current-index">
   <div class="today-label">Now</div>
   <div class="live-badge loading" id="live-badge-index"><span class="dot"></span> Loading live data…</div>
-  <div class="live-temp" id="live-temp-index">{cw_icon} {d['temp_max']:.0f}°C</div>
+  <div class="live-temp" id="live-temp-index">{cw_icon} {d['temp_max']:.1f}°C</div>
   <div class="live-details" id="live-details-index">
-    <div>Feels like <span id="live-feels-index">{at:.0f}°C</span></div>
+    <div>Feels like <span id="live-feels-index">{at:.1f}°C</span></div>
     <div>Humidity <span id="live-humid-index">{hu}%</span></div>
     <div>Wind <span id="live-wind-index">{ws:.0f} km/h {wind_dir(wd)}</span></div>'''
             if current.get('pressure'):
